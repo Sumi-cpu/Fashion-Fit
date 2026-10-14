@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ef">
+  <title>Fashion Fit — Vintage, found well</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --paper: #f6f4ef;
+      --surface: #fffefa;
+      --ink: #252820;
+      --muted: #77796f;
+      --line: #e7e4dc;
+      --green: #425b47;
+      --green-soft: #e8eee5;
+      --orange: #b9603c;
+      --shadow: 0 18px 48px rgb(38 40 32 / 7%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% -18%, rgb(222 225 207 / 55%), transparent 36rem),
+        var(--paper);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .shell {
+      width: min(100% - 32px, 720px);
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: -.055em;
+      text-decoration: none;
+    }
+
+    .mark {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fffefa;
+    }
+
+    .mark svg { width: 16px; height: 16px; }
+
+    .top-note {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .01em;
+    }
+
+    .intro { padding: 35px 0 24px; }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(35px, 7vw, 48px);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: 1.08;
+    }
+
+    .intro-copy {
+      max-width: 510px;
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .weather {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 23px 0 27px;
+      padding: 14px 17px;
+      border: 1px solid #e2e5d9;
+      border-radius: 15px;
+      background: linear-gradient(105deg, #edf0e8, #f2f0e8);
+    }
+
+    .weather-copy { display: flex; align-items: center; gap: 12px; }
+
+    .weather-icon {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 12px;
+      background: rgb(255 255 255 / 68%);
+      color: #9d7138;
+    }
+
+    .weather-icon svg { width: 21px; height: 21px; }
+    .weather-label { margin: 0; font-size: 13px; font-weight: 700; }
+    .weather-detail { margin: 1px 0 0; color: #6f7568; font-size: 12px; }
+    .weather-temp { font-size: 21px; font-weight: 650; letter-spacing: -.04em; white-space: nowrap; }
+    .weather-source { color: #73786c; font-size: 11px; }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 17px;
+    }
+
+    .size-control { display: flex; align-items: center; gap: 10px; }
+    .control-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .sizes { display: flex; gap: 5px; }
+
+    .size-button {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 8px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: #686b62;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .size-button:hover { background: rgb(255 255 255 / 70%); }
+    .size-button[aria-pressed="true"] {
+      border-color: #d8e1d5;
+      background: var(--green-soft);
+      color: #354c3a;
+    }
+
+    .search-wrap { position: relative; width: min(220px, 43%); }
+    .search-wrap svg {
+      position: absolute;
+      top: 50%;
+      left: 11px;
+      width: 15px;
+      height: 15px;
+      color: #85877d;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search {
+      width: 100%;
+      height: 37px;
+      padding: 0 12px 0 34px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      outline: none;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .search:focus { border-color: #9eae9d; box-shadow: 0 0 0 3px rgb(66 91 71 / 10%); }
+    .search::placeholder { color: #96978e; }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 12px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 730;
+      letter-spacing: -.025em;
+    }
+
+    .section-count { color: var(--muted); font-size: 12px; }
+
+    .item-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .featured {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 1.05fr;
+      min-height: 224px;
+      margin-bottom: 26px;
+    }
+
+    .art {
+      position: relative;
+      display: grid;
+      min-height: 196px;
+      overflow: hidden;
+      place-items: center;
+      isolation: isolate;
+      background: var(--art-bg, #e8ded0);
+    }
+
+    .art::before, .art::after {
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .art::before {
+      width: 220px;
+      height: 220px;
+      background: rgb(255 255 255 / 26%);
+      transform: translate(28%, -23%);
+    }
+
+    .art::after {
+      width: 180px;
+      height: 180px;
+      background: rgb(67 70 53 / 7%);
+      transform: translate(-35%, 45%);
+    }
+
+    .art svg {
+      width: min(82%, 215px);
+      height: 175px;
+      filter: drop-shadow(0 13px 12px rgb(43 39 31 / 13%));
+    }
+
+    .art-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 9px;
+      border: 1px solid rgb(255 255 255 / 62%);
+      border-radius: 999px;
+      background: rgb(255 254 250 / 78%);
+      color: #55564d;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .035em;
+      backdrop-filter: blur(8px);
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 23px 24px;
+    }
+
+    .item-kicker {
+      margin: 0 0 6px;
+      color: var(--orange);
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .item-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 25px;
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: 1.13;
+    }
+
+    .item-description { margin: 8px 0 14px; color: var(--muted); font-size: 13px; }
+
+    .item-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      color: #60645a;
+      font-size: 11px;
+    }
+
+    .meta-pill {
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #faf9f5;
+      color: #53564d;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .price-line { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+    .price { font-size: 15px; font-weight: 740; }
+    .old-price { color: #96968c; font-size: 12px; text-decoration: line-through; }
+
+    .alternatives-heading { margin-bottom: 12px; }
+
+    .fabric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .fabric-card { overflow: hidden; box-shadow: none; transition: transform .18s ease, box-shadow .18s ease; }
+    .fabric-card:hover { box-shadow: 0 11px 25px rgb(38 40 32 / 8%); transform: translateY(-2px); }
+    .fabric-card[hidden] { display: none; }
+    .fabric-card .art { min-height: 126px; }
+    .fabric-card .art svg { width: min(70%, 145px); height: 113px; }
+    .fabric-card .art-tag { top: 9px; left: 9px; padding: 4px 8px; }
+
+    .fabric-info { padding: 13px 14px 14px; }
+    .fabric-topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .fabric-name { margin: 0; font-size: 14px; font-weight: 720; letter-spacing: -.025em; }
+    .fabric-note { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .fabric-price { color: #45483f; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .fit-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; }
+    .fit { display: inline-flex; align-items: center; gap: 5px; color: #557056; font-size: 11px; font-weight: 650; }
+    .fit svg { width: 13px; height: 13px; }
+
+    .save-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-height: 29px;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: transparent;
+      color: #66685e;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+    }
+
+    .save-button:hover { border-color: #d7ddd2; background: #f2f5ef; color: var(--green); }
+    .save-button[aria-pressed="true"] { border-color: #e8cfc5; background: #fbf0ec; color: #a94c36; }
+    .save-button svg { width: 13px; height: 13px; }
+    .empty-state { display: none; grid-column: 1 / -1; padding: 28px; border: 1px dashed var(--line); border-radius: 15px; color: var(--muted); text-align: center; font-size: 13px; }
+    .empty-state.visible { display: block; }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+      color: #85867d;
+      font-size: 11px;
+    }
+
+    @media (max-width: 520px) {
+      .shell { width: min(100% - 26px, 440px); padding-top: 20px; }
+      .topbar { padding-bottom: 20px; }
+      .intro { padding-top: 27px; }
+      .weather { margin: 19px 0 23px; }
+      .controls { align-items: flex-start; flex-direction: column; gap: 11px; }
+      .search-wrap { width: 100%; }
+      .featured { grid-template-columns: 1fr; }
+      .featured .art { min-height: 180px; }
+      .featured .art svg { height: 160px; }
+      .item-info { padding: 19px 20px 20px; }
+      .fabric-grid { gap: 9px; }
+      .fabric-card .art { min-height: 107px; }
+      .fabric-card .art svg { height: 97px; }
+      .fabric-info { padding: 11px; }
+      .fit-row { align-items: flex-start; flex-direction: column; }
+      .footer { flex-direction: column; gap: 3px; }
+    }
+
+    @media (max-width: 360px) {
+      .fabric-grid { grid-template-columns: 1fr; }
+      .fabric-card .art { min-height: 135px; }
+      .fabric-card .art svg { height: 120px; }
+      .top-note { font-size: 11px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #1c201c;
+        --surface: #252a24;
+        --ink: #efeee7;
+        --muted: #aaa99e;
+        --line: #3b4038;
+        --green: #95ad8f;
+        --green-soft: #303a30;
+        --orange: #d38a6e;
+        --shadow: 0 18px 48px rgb(0 0 0 / 20%);
+      }
+      body { background: radial-gradient(ellipse at 50% -18%, rgb(68 79 61 / 22%), transparent 36rem), var(--paper); }
+      .mark { color: #20271f; }
+      .weather { border-color: #40473d; background: linear-gradient(105deg, #2b332a, #302f27); }
+      .weather-icon { background: rgb(255 255 255 / 8%); }
+      .weather-detail, .weather-source { color: #b4b7a9; }
+      .size-button { color: #c0bfb4; }
+      .size-button:hover { background: rgb(255 255 255 / 5%); }
+      .size-button[aria-pressed="true"] { border-color: #495b46; color: #d6e3d0; }
+      .search { background: #252a24; }
+      .art-tag { border-color: rgb(30 31 27 / 12%); background: rgb(35 38 32 / 78%); color: #f3f0e8; }
+      .meta-pill { background: #2d322b; color: #d2d0c5; }
+      .fabric-price { color: #e0ded3; }
+      .save-button { color: #c2c0b4; }
+      .save-button:hover { border-color: #4b5948; background: #30392f; color: #c6d8c0; }
+      .save-button[aria-pressed="true"] { border-color: #65453d; background: #402d28; color: #e49a7e; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="wordmark" href="#" aria-label="Fashion Fit home">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M19 5c-7 0-12 3.5-12 9a5 5 0 0 0 5 5c5.5 0 7-6 7-14Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20c2.1-4.2 5.3-6.8 9.5-8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        Fashion Fit
+      </a>
+      <span class="top-note">Pre-loved, well considered</span>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">The fabric edit · No. 04</p>
+      <h1 id="page-title">Find your feel.</h1>
+      <p class="intro-copy">One great vintage shape, five different fabrics. Pick your size and find the one that feels like you.</p>
+    </section>
+
+    <section class="weather" aria-label="Current weather">
+      <div class="weather-copy">
+        <span class="weather-icon" id="weather-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M7 18h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 11.5 3.3 3.3 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 20-1 2m6-2-1 2m6-2-1 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </span>
+        <div>
+          <p class="weather-label" id="weather-place">A little weather note</p>
+          <p class="weather-detail" id="weather-description">Checking the sky for you…</p>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="weather-temp" id="weather-temperature">—°</div>
+        <div class="weather-source" id="weather-source">Open-Meteo</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="current-heading">
+      <div class="section-heading">
+        <h2 id="current-heading">The shape, right now</h2>
+        <span class="section-count">Cotton · vintage find</span>
+      </div>
+      <article class="item-card featured">
+        <div class="art" style="--art-bg:#e7ddce">
+          <span class="art-tag">CURRENT PICK</span>
+          <svg viewBox="0 0 220 190" role="img" aria-label="Illustration of an oatmeal cotton vintage dress">
+            <path d="m74 24 18-10h36l18 10 24 15-14 27-17-9-4 34 25 57H60l25-57-4-34-17 9-14-27 24-15Z" fill="#b9a98e" stroke="#827760" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="m92 14 18 18 18-18 12 10-15 22 2 45H93l2-45-15-22 12-10Z" fill="#e9dfca" stroke="#a79a7e" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="m93 16 17 16 17-16" fill="none" stroke="#a79a7e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M95 91h30m-30 0-23 56m53-56 23 56m-38-56v56" fill="none" stroke="#c4b69b" stroke-width="1.5"/>
+            <path d="M107 51h7m-7 13h7m-7 13h7" stroke="#897d66" stroke-width="2.1" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="item-info">
+          <p class="item-kicker">Softly worn · Ready for more</p>
+          <h3 class="item-title">The Everyday<br>Button Dress</h3>
+          <p class="item-description">A breathable, broken-in classic in warm natural cotton.</p>
+          <div class="item-meta">
+            <span class="meta-pill current-size">Size M</span>
+            <span>Good vintage condition</span>
+          </div>
+          <div class="price-line"><span class="price">$34</span><span class="old-price">$68 new</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section aria-labelledby="alternatives-heading">
+      <div class="section-heading alternatives-heading">
+        <h2 id="alternatives-heading">Same shape, other feels</h2>
+        <span class="section-count" id="result-count">5 fabrics · size M</span>
+      </div>
+      <div class="controls">
+        <div class="size-control">
+          <span class="control-label">Your size</span>
+          <div class="sizes" role="group" aria-label="Choose clothing size">
+            <button class="size-button" type="button" data-size="XS" aria-pressed="false">XS</button>
+            <button class="size-button" type="button" data-size="S" aria-pressed="false">S</button>
+            <button class="size-button" type="button" data-size="M" aria-pressed="true">M</button>
+            <button class="size-button" type="button" data-size="L" aria-pressed="false">L</button>
+            <button class="size-button" type="button" data-size="XL" aria-pressed="false">XL</button>
+          </div>
+        </div>
+        <label class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input class="search" id="fabric-search" type="search" placeholder="Search fabrics" autocomplete="off" aria-label="Search fabrics">
+        </label>
+      </div>
+
+      <div class="fabric-grid" id="fabric-grid">
+        <article class="item-card fabric-card" data-fabric="linen">
+          <div class="art" style="--art-bg:#e9e1d0">
+            <span class="art-tag">AIRY · NATURAL</span>
+            <svg viewBox="0 0 180 135" role="img" aria-label="Sage green linen vintage shirt dress">
+              <path d="m58 19 14-7h34l15 7 20 12-11 21-14-7-3 25 20 43H47l20-43-3-25-14 7-11-21 19-12Z" fill="#758571" stroke="#596b58" stroke-width="2" stroke-linejoin="round"/>
+              <path d="m72 12 17 13 17-13 10 7-12 17 2 34H72l2-34-12-17 10-7Z" fill="#a4ad93" stroke="#6d7b65" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M74 70h32m-32 0-19 43m51-43 19 43m-35-43v43" fill="none" stroke="#828e79" stroke-width="1.4"/>
+              <path d="M87 39h5m-5 10h5m-5 10h5" stroke="#596b58" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="fabric-info">
+            <div class="fabric-topline"><div><h3 class="fabric-name">Linen</h3><p class="fabric-note">Cool, breezy, lived-in</p></div><span class="fabric-price">$38</span></div>
+            <div class="fit-row"><span class="fit"><svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="size-fit">Fits M</span></span><button class="save-button" type="button" aria-pressed="false" aria-label="Save linen dress"><svg viewBox="0 0 20 20" fill="none"><path d="M16.8 4.6a4.2 4.2 0 0 0-5.9 0L10 5.5l-.9-.9a4.2 4.2 0 0 0-5.9 5.9l.9.9L10 17l5.9-5.6.9-.9a4.2 4.2 0 0 0 0-5.9Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Save</span></button></div>
+          </div>
+        </article>
+
+        <article class="item-card fabric-card" data-fabric="wool">
+          <div class="art" style="--art-bg:#dfdfd0">
+            <span class="art-tag">COZY · SOFT</span>
+            <svg viewBox="0 0 180 135" role="img" aria-label="Warm rust wool vintage shirt dress">
+              <path d="m58 19 14-7h34l15 7 20 12-11 21-14-7-3 25 20 43H47l20-43-3-25-14 7-11-21 19-12Z" fill="#aa6751" stroke="#824c3c" stroke-width="2" stroke-linejoin="round"/>
+              <path d="m72 12 17 13 17-13 10 7-12 17 2 34H72l2-34-12-17 10-7Z" fill="#c8886e" stroke="#945c49" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M74 70h32m-32 0-19 43m51-43 19 43m-35-43v43" fill="none" stroke="#b27661" stroke-width="1.4"/>
+              <path d="M87 39h5m-5 10h5m-5 10h5" stroke="#824c3c" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="fabric-info">
+            <div class="fabric-topline"><div><h3 class="fabric-name">Wool</h3><p class="fabric-note">A little warmth, all day</p></div><span class="fabric-price">$42</span></div>
+            <div class="fit-row"><span class="fit"><svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="size-fit">Fits M</span></span><button class="save-button" type="button" aria-pressed="false" aria-label="Save wool dress"><svg viewBox="0 0 20 20" fill="none"><path d="M16.8 4.6a4.2 4.2 0 0 0-5.9 0L10 5.5l-.9-.9a4.2 4.2 0 0 0-5.9 5.9l.9.9L10 17l5.9-5.6.9-.9a4.2 4.2 0 0 0 0-5.9Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Save</span></button></div>
+          </div>
+        </article>
+
+        <article class="item-card fabric-card" data-fabric="hemp">
+          <div class="art" style="--art-bg:#e3e2d4">
+            <span class="art-tag">EARTHY · TOUGH</span>
+            <svg viewBox="0 0 180 135" role="img" aria-label="Olive hemp vintage shirt dress">
+              <path d="m58 19 14-7h34l15 7 20 12-11 21-14-7-3 25 20 43H47l20-43-3-25-14 7-11-21 19-12Z" fill="#77765a" stroke="#585a43" stroke-width="2" stroke-linejoin="round"/>
+              <path d="m72 12 17 13 17-13 10 7-12 17 2 34H72l2-34-12-17 10-7Z" fill="#9b9b75" stroke="#68694e" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M74 70h32m-32 0-19 43m51-43 19 43m-35-43v43" fill="none" stroke="#828261" stroke-width="1.4"/>
+              <path d="M87 39h5m-5 10h5m-5 10h5" stroke="#57583e" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="fabric-info">
+            <div class="fabric-topline"><div><h3 class="fabric-name">Hemp</h3><p class="fabric-note">Textured, easygoing, sturdy</p></div><span class="fabric-price">$36</span></div>
+            <div class="fit-row"><span class="fit"><svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="size-fit">Fits M</span></span><button class="save-button" type="button" aria-pressed="false" aria-label="Save hemp dress"><svg viewBox="0 0 20 20" fill="none"><path d="M16.8 4.6a4.2 4.2 0 0 0-5.9 0L10 5.5l-.9-.9a4.2 4.2 0 0 0-5.9 5.9l.9.9L10 17l5.9-5.6.9-.9a4.2 4.2 0 0 0 0-5.9Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Save</span></button></div>
+          </div>
+        </article>
+
+        <article class="item-card fabric-card" data-fabric="denim">
+          <div class="art" style="--art-bg:#dce3e3">
+            <span class="art-tag">ROBUST · TIMELESS</span>
+            <svg viewBox="0 0 180 135" role="img" aria-label="Indigo denim vintage shirt dress">
+              <path d="m58 19 14-7h34l15 7 20 12-11 21-14-7-3 25 20 43H47l20-43-3-25-14 7-11-21 19-12Z" fill="#526c82" stroke="#3b5367" stroke-width="2" stroke-linejoin="round"/>
+              <path d="m72 12 17 13 17-13 10 7-12 17 2 34H72l2-34-12-17 10-7Z" fill="#7891a2" stroke="#506b7e" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M74 70h32m-32 0-19 43m51-43 19 43m-35-43v43" fill="none" stroke="#627e90" stroke-width="1.4"/>
+              <path d="M87 39h5m-5 10h5m-5 10h5" stroke="#3d566a" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M49 113h82" stroke="#a9a478" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="fabric-info">
+            <div class="fabric-topline"><div><h3 class="fabric-name">Denim</h3><p class="fabric-note">Structured, soft with age</p></div><span class="fabric-price">$45</span></div>
+            <div class="fit-row"><span class="fit"><svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="size-fit">Fits M</span></span><button class="save-button" type="button" aria-pressed="false" aria-label="Save denim dress"><svg viewBox="0 0 20 20" fill="none"><path d="M16.8 4.6a4.2 4.2 0 0 0-5.9 0L10 5.5l-.9-.9a4.2 4.2 0 0 0-5.9 5.9l.9.9L10 17l5.9-5.6.9-.9a4.2 4.2 0 0 0 0-5.9Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Save</span></button></div>
+          </div>
+        </article>
+
+        <article class="item-card fabric-card" data-fabric="silk">
+          <div class="art" style="--art-bg:#e8dfe0">
+            <span class="art-tag">FLUID · LIGHT</span>
+            <svg viewBox="0 0 180 135" role="img" aria-label="Dusty rose silk vintage shirt dress">
+              <path d="m58 19 14-7h34l15 7 20 12-11 21-14-7-3 25 20 43H47l20-43-3-25-14 7-11-21 19-12Z" fill="#b88587" stroke="#936568" stroke-width="2" stroke-linejoin="round"/>
+              <path d="m72 12 17 13 17-13 10 7-12 17 2 34H72l2-34-12-17 10-7Z" fill="#d3a6a4" stroke="#a17678" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M74 70h32m-32 0-19 43m51-43 19 43m-35-43v43" fill="none" stroke="#bf9292" stroke-width="1.4"/>
+              <path d="M87 39h5m-5 10h5m-5 10h5" stroke="#8b5f63" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="fabric-info">
+            <div class="fabric-topline"><div><h3 class="fabric-name">Silk</h3><p class="fabric-note">Drapey, smooth, a little special</p></div><span class="fabric-price">$48</span></div>
+            <div class="fit-row"><span class="fit"><svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="size-fit">Fits M</span></span><button class="save-button" type="button" aria-pressed="false" aria-label="Save silk dress"><svg viewBox="0 0 20 20" fill="none"><path d="M16.8 4.6a4.2 4.2 0 0 0-5.9 0L10 5.5l-.9-.9a4.2 4.2 0 0 0-5.9 5.9l.9.9L10 17l5.9-5.6.9-.9a4.2 4.2 0 0 0 0-5.9Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Save</span></button></div>
+          </div>
+        </article>
+        <div class="empty-state" id="empty-state">No fabrics match that search. Try linen, wool, hemp, denim, or silk.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Good clothes deserve another chapter.</span>
+      <span>Thoughtfully found, never brand new.</span>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const sizeButtons = [...document.querySelectorAll(".size-button")];
+      const sizeLabels = document.querySelectorAll(".current-size, .size-fit");
+      const cards = [...document.querySelectorAll(".fabric-card")];
+      const search = document.getElementById("fabric-search");
+      const resultCount = document.getElementById("result-count");
+      const emptyState = document.getElementById("empty-state");
+      let selectedSize = "M";
+
+      function updateVisibleCards() {
+        const query = search.value.trim().toLowerCase();
+        let visible = 0;
+        for (const card of cards) {
+          const matches = card.dataset.fabric.includes(query);
+          card.hidden = !matches;
+          if (matches) visible++;
+        }
+        resultCount.textContent = `${visible} ${visible === 1 ? "fabric" : "fabrics"} · size ${selectedSize}`;
+        emptyState.classList.toggle("visible", visible === 0);
+      }
+
+      sizeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          selectedSize = button.dataset.size;
+          sizeButtons.forEach(option => option.setAttribute("aria-pressed", String(option === button)));
+          sizeLabels.forEach(label => {
+            label.textContent = label.classList.contains("size-fit") ? `Fits ${selectedSize}` : `Size ${selectedSize}`;
+          });
+          updateVisibleCards();
+        });
+      });
+
+      search.addEventListener("input", updateVisibleCards);
+      document.querySelectorAll(".save-button").forEach(button => {
+        button.addEventListener("click", () => {
+          const saved = button.getAttribute("aria-pressed") !== "true";
+          button.setAttribute("aria-pressed", String(saved));
+          button.querySelector("span").textContent = saved ? "Saved" : "Save";
+        });
+      });
+
+      const weatherCodes = {
+        0: ["Clear skies", "sun"], 1: ["Mostly clear", "sun"], 2: ["Partly cloudy", "cloud"],
+        3: ["Overcast", "cloud"], 45: ["Misty", "cloud"], 48: ["Misty", "cloud"],
+        51: ["Light drizzle", "rain"], 53: ["Drizzle", "rain"], 55: ["Steady drizzle", "rain"],
+        61: ["Light rain", "rain"], 63: ["Rain", "rain"], 65: ["Heavy rain", "rain"],
+        71: ["Light snow", "snow"], 73: ["Snow", "snow"], 75: ["Heavy snow", "snow"],
+        80: ["Passing showers", "rain"], 81: ["Showers", "rain"], 82: ["Heavy showers", "rain"],
+        95: ["Thunderstorms", "storm"], 96: ["Thunderstorms", "storm"], 99: ["Thunderstorms", "storm"]
+      };
+
+      const icons = {
+        sun: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+        cloud: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 18h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 11.5 3.3 3.3 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',
+        rain: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 15h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 8.5 3.3 3.3 0 0 0 7 15Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 17-1 3m6-3-1 3m6-3-1 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+        snow: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 14h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 7.5 3.3 3.3 0 0 0 7 14Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 17v4m-1.7-3 3.4 2m0-2-3.4 2m8.7-3v4m-1.7-3 3.4 2m0-2-3.4 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+        storm: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 14h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 7.5 3.3 3.3 0 0 0 7 14Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m13 14-3 5h3l-1 3 4-6h-3l1-2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+      };
+
+      function showWeather(data, isLive) {
+        const description = weatherCodes[data.code] || ["Current conditions", "cloud"];
+        document.getElementById("weather-place").textContent = "Today in Sydney, Australia";
+        document.getElementById("weather-description").textContent = `${description[0]} · Feels like a good day to wear what lasts`;
+        document.getElementById("weather-temperature").textContent = `${Math.round(data.temperature)}°`;
+        document.getElementById("weather-source").textContent = isLive ? "Live · Open-Meteo" : "Sample conditions";
+        document.getElementById("weather-icon").innerHTML = icons[description[1]];
+      }
+
+      const fallback = { temperature: 21, code: 2 };
+      showWeather(fallback, false);
+
+      async function loadWeather(latitude, longitude) {
+        const endpoint = new URL("https://api.open-meteo.com/v1/forecast");
+        endpoint.search = new URLSearchParams({
+          latitude: String(latitude),
+          longitude: String(longitude),
+          current: "temperature_2m,weather_code",
+          temperature_unit: "celsius",
+          timezone: "auto"
+        });
+        const response = await fetch(endpoint, { signal: AbortSignal.timeout(6500) });
+        if (!response.ok) throw new Error(`Open-Meteo returned ${response.status}`);
+        const payload = await response.json();
+        const current = payload.current;
+        if (typeof current?.temperature_2m !== "number" || typeof current?.weather_code !== "number") {
+          throw new Error("Open-Meteo response did not include current weather");
+        }
+        showWeather({ temperature: current.temperature_2m, code: current.weather_code }, true);
+      }
+
+      loadWeather(-33.8688, 151.2093).catch(error => {
+        console.warn("Live weather unavailable; showing sample conditions.", error);
+      });
+    })();
+  </script>
+</body>
+</html>

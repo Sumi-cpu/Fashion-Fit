@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fashion Fits</title>
 <style>
+
 body{
     margin:0;
     background:#fff;
@@ -26,27 +27,108 @@ header b{
     color:#777;
     font-size:13px
 }
-main{max-width:980px;margin:0 auto;padding:20px}
-h2{font-size:16px;margin:24px 0 8px}
-label{display:block;font-size:12px;color:#555;margin-bottom:2px}
-input,select,button{font:inherit;padding:5px 7px;border:1px solid #bbb;background:#fff;color:#111;border-radius:0}
-input[type=number]{width:80px}
-button{background:#111;color:#fff;border-color:#111;cursor:pointer;padding:6px 14px}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
-.item{cursor:pointer}
-.ph{position:relative;width:100%;aspect-ratio:3/4;background:#eee;overflow:hidden;margin-bottom:6px}
-.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.item.sel .ph{outline:2px solid #111}
-.grey{color:#777}
-.fit{font-weight:bold}
-#detail{display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid #ddd;margin-top:26px;padding-top:18px}
-#detail .ph{width:280px;flex:none}
-#detail .info{flex:1;min-width:260px}
-table{border-collapse:collapse;width:100%;margin-top:10px}
-td,th{border-bottom:1px solid #e5e5e5;padding:5px 4px;text-align:left;font-weight:normal}
-th{color:#555;font-size:12px}
-.tag{background:#f5f5f5;border:1px solid #ddd;padding:8px;font-family:Consolas,monospace;font-size:13px;margin:6px 0}
+
+main{
+    max-width:980px;
+    margin:0 auto;
+    padding:20px
+}
+h2{
+    font-size:16px;
+    margin:24px 0 8px
+}
+label{
+    display:block;
+    font-size:12px;
+    color:#555;
+    margin-bottom:2px
+}
+input,select,button{
+    font:inherit;padding:5px 7px;
+    border:1px solid #bbb;
+    background:#fff;color:#111;
+    border-radius:0
+}
+
+input[type=number]{
+    width:80px
+}
+button{
+    background:#111;
+    color:#fff;
+    border-color:#111;
+    cursor:pointer;
+    padding:6px 14px
+}
+.row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:flex-end
+}
+.grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.item{
+    cursor:pointer
+}
+
+.ph{
+    position:relative;width:100%;aspect-ratio:3/4;background:#eee;overflow:hidden;margin-bottom:6px
+}
+
+.ph img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover
+}
+
+.item.sel .ph{
+    outline:2px solid #111
+}
+
+.grey{
+    color:#777
+}
+
+.fit{
+    font-weight:bold
+}
+
+#detail{
+    display:flex;
+    gap:24px;
+    flex-wrap:wrap;
+    border-top:1px solid #ddd;
+    margin-top:26px;padding-top:18px
+}
+#detail .ph{
+    width:280px;
+    flex:none
+}
+#detail .info{
+    flex:1;
+    min-width:260px
+}
+table{
+    border-collapse:collapse;
+    width:100%;
+    margin-top:10px
+}
+td,th{
+    border-bottom:1px solid #e5e5e5;
+    padding:5px 4px;
+    text-align:left;
+    font-weight:normal
+}
+th{
+    color:#555;
+    font-size:12px
+}
+.tag{
+    background:#f5f5f5;
+    border:1px solid #ddd;
+    padding:8px;
+    font-family:Consolas,monospace;
+    font-size:13px;margin:6px 0
+}
 .wide{overflow-x:auto}
 </style></head><body>
 <header><b>Fashion Fits</b><span>Demo. Tag reading and size charts are simulated.</span></header>
@@ -70,7 +152,7 @@ th{color:#555;font-size:12px}
 </div>
 </main>
 <script>
-// Photos live in an "images" folder next to this file.
+
 const BRANDS={"Zara":0,"Levi's":-2,"Gap":2,"Sportsgirl":-1,"Unknown vintage":0};
 const AU={AU:s=>s,UK:s=>s+4,US:s=>s+4,EU:s=>s-28,JP:s=>s+1};
 const BODY={bust:92,waist:74,hip:98}; // cm, edit here
@@ -98,14 +180,20 @@ function fit(it){
 }
 const photo=it=>`<div class="ph">${it.img?`<img src="${it.img}" alt="${it.n}" onerror="this.outerHTML='<div style=&quot;padding:8px;color:#777;font-size:12px&quot;>Not found: '+this.getAttribute('src')+'</div>'">`:""}</div>`;
 let sel=0;
+
 function grid(){
  $("grid").innerHTML=ITEMS.map((it,i)=>`<div class="item ${i===sel?"sel":""}" data-i="${i}">${photo(it)}
  <div>${it.n}</div><div class="grey">${it.b}${it.p?" · "+it.p:""}</div>
  <div class="fit">${fit(it).score}% fit${it.r?"":' <span class="grey" style="font-weight:normal">(tag unclear)</span>'}</div></div>`).join("");
  document.querySelectorAll(".item").forEach(e=>e.onclick=()=>{sel=+e.dataset.i;grid();detail(true)});
 }
+
+
 function detail(scan){
+
  const it=ITEMS[sel],f=fit(it);
+
+
  const tag=it.r?`Brand: ${it.b}<br>Size: ${it.s} (${it.c})<br>Era: ${ERAS[it.era]}${it.m?"<br>Fabric: "+it.m:""}`
   :"Tag too faded to read.<br>Brand not found. Using a rough estimate.";
  $("detail").innerHTML=`${photo(it)}<div class="info"><h2 style="margin-top:0">${it.n}</h2>
@@ -115,12 +203,19 @@ function detail(scan){
  <div class="grey">${it.r?"Tag read clearly.":"Not sure about this one. Ask the seller for measurements."}</div>
  <div class="wide"><table><tr><th>Area</th><th>Item</th><th>You</th><th></th></tr>
  ${f.rows.map(r=>`<tr><td>${r.a}</td><td>${r.g.toFixed(1)}</td><td>${r.y}</td><td>${r.note}</td></tr>`).join("")}</table></div></div>`;
+
+
  if(scan)setTimeout(()=>{const t=$("tag");if(t)t.innerHTML=tag},600);
+
+
 }
 $("add").onclick=()=>{
+
  const f=$("photo").files[0];
  ITEMS.push({n:$("cname").value||"My listing",img:f?URL.createObjectURL(f):"",b:$("cbrand").value,s:+$("csize").value,c:$("ccountry").value,era:+$("cera").value,r:+$("cread").value,p:"",m:""});
  sel=ITEMS.length-1;grid();detail(true);$("detail").scrollIntoView({behavior:"smooth"});
 };
+
 grid();detail(false);
+
 </script></body></html>

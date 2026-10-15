@@ -141,7 +141,8 @@
     .weather-label { margin: 0; font-size: 13px; font-weight: 700; }
     .weather-detail { margin: 1px 0 0; color: #6f7568; font-size: 12px; }
     .weather-temp { font-size: 21px; font-weight: 650; letter-spacing: -.04em; white-space: nowrap; }
-    .weather-source { color: #73786c; font-size: 11px; }
+    .weather-source, .weather-time { color: #73786c; font-size: 11px; }
+    .weather-time { margin-top: 2px; }
 
     .controls {
       display: flex;
@@ -448,7 +449,7 @@
       .mark { color: #20271f; }
       .weather { border-color: #40473d; background: linear-gradient(105deg, #2b332a, #302f27); }
       .weather-icon { background: rgb(255 255 255 / 8%); }
-      .weather-detail, .weather-source { color: #b4b7a9; }
+      .weather-detail, .weather-source, .weather-time { color: #b4b7a9; }
       .size-button { color: #c0bfb4; }
       .size-button:hover { background: rgb(255 255 255 / 5%); }
       .size-button[aria-pressed="true"] { border-color: #495b46; color: #d6e3d0; }
@@ -475,7 +476,6 @@
     </header>
 
     <section class="intro" aria-labelledby="page-title">
-      <p class="eyebrow">The fabric edit · No. 04</p>
       <h1 id="page-title">Find your feel.</h1>
       <p class="intro-copy">One great vintage shape, five different fabrics. Pick your size and find the one that feels like you.</p>
     </section>
@@ -493,6 +493,7 @@
       <div style="text-align:right">
         <div class="weather-temp" id="weather-temperature">—°</div>
         <div class="weather-source" id="weather-source">Open-Meteo</div>
+        <div class="weather-time" id="weather-time" aria-live="off"></div>
       </div>
     </section>
 
@@ -698,6 +699,19 @@
         storm: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 14h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 7.5 3.3 3.3 0 0 0 7 14Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m13 14-3 5h3l-1 3 4-6h-3l1-2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'
       };
 
+      const sydneyTimeFormatter = new Intl.DateTimeFormat("en-AU", {
+        timeZone: "Australia/Sydney",
+        hour: "numeric",
+        minute: "2-digit"
+      });
+
+      function updateSydneyTime() {
+        document.getElementById("weather-time").textContent = `${sydneyTimeFormatter.format(new Date())} Sydney time`;
+      }
+
+      updateSydneyTime();
+      setInterval(updateSydneyTime, 30_000);
+
       function showWeather(data, isLive) {
         const description = weatherCodes[data.code] || ["Current conditions", "cloud"];
         document.getElementById("weather-place").textContent = "Today in Sydney, Australia";
@@ -717,7 +731,7 @@
           longitude: String(longitude),
           current: "temperature_2m,weather_code",
           temperature_unit: "celsius",
-          timezone: "auto"
+          timezone: "Australia/Sydney"
         });
         const response = await fetch(endpoint, { signal: AbortSignal.timeout(6500) });
         if (!response.ok) throw new Error(`Open-Meteo returned ${response.status}`);

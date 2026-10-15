@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6f4ef">
   <title>Fashion Fit — Vintage, found well</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <style>
     :root {
       color-scheme: light dark;
@@ -747,6 +749,12 @@
         console.warn("Live weather unavailable; showing sample conditions.", error);
       });
     })();
+  </script>
+   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () =>
+        navigator.serviceWorker.register('service-worker.js'));
+    }
   </script>
 </body>
 </html>

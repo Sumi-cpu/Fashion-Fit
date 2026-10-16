@@ -198,6 +198,7 @@
     .demo-button:hover { background: #dde7d9; }
     .demo-status { min-height: 30px; margin: 8px 0 0 !important; color: #557056 !important; font-size: 10px !important; }
     .fit-result { margin: 10px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.2; }
+    .fit-size-label { display: block; margin-bottom: 3px; color: var(--green); font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
     .fit-detail, .size-equivalents { margin: 5px 0 0 !important; color: var(--muted); font-size: 10px !important; line-height: 1.5 !important; }
     .fit-note {
       display: block;
@@ -622,9 +623,9 @@
           <h3 id="shopper-title">2. Match the shopper</h3>
           <p>Enter body measurements and the label system you usually shop by.</p>
           <div class="measurement-fields">
-            <label for="body-bust">Bust<input class="measurement-input body-measurement" id="body-bust" type="number" min="20" max="200" step="0.5" value="88" inputmode="decimal"></label>
-            <label for="body-waist">Waist<input class="measurement-input body-measurement" id="body-waist" type="number" min="20" max="200" step="0.5" value="72" inputmode="decimal"></label>
-            <label for="body-hip">Hip<input class="measurement-input body-measurement" id="body-hip" type="number" min="20" max="200" step="0.5" value="96" inputmode="decimal"></label>
+            <label for="body-bust">Bust<input class="measurement-input body-measurement" id="body-bust" type="number" min="20" max="200" step="0.5" value="90" inputmode="decimal"></label>
+            <label for="body-waist">Waist<input class="measurement-input body-measurement" id="body-waist" type="number" min="20" max="200" step="0.5" value="74" inputmode="decimal"></label>
+            <label for="body-hip">Hip<input class="measurement-input body-measurement" id="body-hip" type="number" min="20" max="200" step="0.5" value="98" inputmode="decimal"></label>
           </div>
           <div class="demo-selectors">
             <label class="demo-select-label" for="body-unit">Unit
@@ -637,14 +638,15 @@
           <label class="demo-select-label" for="size-region">Your usual label region
             <select class="demo-select" id="size-region"><option value="US">United States (US)</option><option value="UK">United Kingdom (UK)</option><option value="EU">Europe (EU)</option><option value="AU" selected>Australia (AU)</option></select>
           </label>
+          <p class="fit-detail">Size guide (bust / waist / hip, cm): XS ≤82 / 66 / 90 · S ≤88 / 72 / 96 · M ≤94 / 78 / 102 · L ≤102 / 86 / 110 · XL ≤110 / 94 / 118.</p>
           <p class="demo-status" id="shopper-status" aria-live="polite">Adjust the values to see an instant fit estimate.</p>
         </section>
 
         <section class="demo-step" aria-labelledby="circulation-title">
           <h3 id="circulation-title">3. Keep it in circulation</h3>
           <p>Give the next buyer a useful fit note to reduce guesswork and avoidable returns.</p>
-          <p class="fit-result" id="fit-result" aria-live="polite">Ready to compare</p>
-          <p class="fit-detail" id="fit-detail">Record a garment sample and enter shopper measurements.</p>
+          <p class="fit-result" id="fit-result" aria-live="polite"><span class="fit-size-label">Recommended size</span>Ready to compare</p>
+          <p class="fit-detail" id="fit-detail">Enter shopper measurements to estimate a clothing size.</p>
           <p class="size-equivalents" id="size-equivalents">Approximate label equivalents will appear here.</p>
           <label class="demo-select-label" for="fit-note">Seller listing fit note
             <textarea class="fit-note" id="fit-note" readonly>Record a sample and enter shopper measurements to create a fit note.</textarea>
@@ -865,6 +867,13 @@
       };
       const minimumEase = { bust: 6, waist: 4, hip: 6 };
       const maximumEase = { bust: 18, waist: 14, hip: 20 };
+      const bodySizeUpperBounds = [
+        { size: "XS", bust: 82, waist: 66, hip: 90 },
+        { size: "S", bust: 88, waist: 72, hip: 96 },
+        { size: "M", bust: 94, waist: 78, hip: 102 },
+        { size: "L", bust: 102, waist: 86, hip: 110 },
+        { size: "XL", bust: 110, waist: 94, hip: 118 }
+      ];
       let sampleMeasurements = { bust: 96, waist: 82, hip: 104 };
 
       function readMeasurements(prefix, unit) {
@@ -903,6 +912,16 @@
         return { title: "Likely comfortable fit", detail: "The sample has a moderate amount of ease at the bust, waist and hip." };
       }
 
+      function getRecommendedSize(body) {
+        const index = bodySizeUpperBounds.findIndex(range =>
+          measurementNames.every(name => body[name] <= range[name])
+        );
+        return {
+          size: bodySizeUpperBounds[index < 0 ? bodySizeUpperBounds.length - 1 : index].size,
+          beyondChart: measurementNames.some(name => body[name] > bodySizeUpperBounds.at(-1)[name])
+        };
+      }
+
       function updateFitDemo() {
         const bodyUnit = document.getElementById("body-unit").value;
         const body = readMeasurements("body", bodyUnit);
@@ -911,9 +930,11 @@
         const note = document.getElementById("fit-note");
         const equivalents = document.getElementById("size-equivalents");
         const shopperStatus = document.getElementById("shopper-status");
+        const recommendation = result.querySelector(".fit-size-label");
 
         if (!body) {
-          result.textContent = "Check the measurements";
+          recommendation.textContent = "Recommended size";
+          result.lastChild.textContent = "Add your measurements";
           detail.textContent = "Enter positive bust, waist and hip values to calculate the fit estimate.";
           equivalents.textContent = "Choose a usual size to see approximate regional labels.";
           note.value = "Complete all shopper measurements to create a fit note.";
@@ -924,22 +945,28 @@
         const size = document.getElementById("usual-size").value;
         const region = document.getElementById("size-region").value;
         const labels = regionSizes[size];
-        const regionalSizes = `US ${labels.US} · UK ${labels.UK} · EU ${labels.EU} · AU ${labels.AU}`;
-        equivalents.textContent = `Approximate equivalents for ${region} ${labels[region]} (${size}): ${regionalSizes}. Brand sizing varies.`;
+        const recommended = getRecommendedSize(body);
+        const recommendedLabels = regionSizes[recommended.size];
+        const regionalSizes = `US ${recommendedLabels.US} · UK ${recommendedLabels.UK} · EU ${recommendedLabels.EU} · AU ${recommendedLabels.AU}`;
+        recommendation.textContent = "Recommended clothing size";
+        result.lastChild.textContent = recommended.beyondChart ? `${recommended.size} or larger` : recommended.size;
+        equivalents.textContent = `From your measurements: ${region} ${recommendedLabels[region]} (${recommended.size}). Other approximate labels: ${regionalSizes}. You usually shop ${region} ${labels[region]} (${size}). Brand sizing varies.`;
         shopperStatus.textContent = `Reading body measurements in ${bodyUnit}; comparing the garment in centimetres.`;
 
         const sampleStatus = document.getElementById("sample-status");
         const sampleIsCurrent = sampleStatus.dataset.current === "true";
         if (!sampleIsCurrent) {
-          result.textContent = "Record the garment sample";
+          recommendation.textContent = "Recommended clothing size";
+          result.lastChild.textContent = recommended.beyondChart ? `${recommended.size} or larger` : recommended.size;
           detail.textContent = "Save the edited garment measurements before comparing sizes.";
           note.value = "Record the garment sample to create a fit note.";
           return;
         }
 
         const estimate = getFitEstimate(sampleMeasurements, body);
-        result.textContent = estimate.title;
-        detail.textContent = estimate.detail;
+        recommendation.textContent = "Recommended clothing size";
+        result.lastChild.textContent = recommended.beyondChart ? `${recommended.size} or larger` : recommended.size;
+        detail.textContent = `Sampled garment: ${estimate.title.toLowerCase()}. ${estimate.detail}`;
         const garmentUnit = document.getElementById("garment-unit").value;
         const garmentSummary = measurementNames.map(name =>
           `${name}: ${formatMeasurement(sampleMeasurements[name], garmentUnit)}`
@@ -951,7 +978,8 @@
           `Fashion Fit vintage fit note — The Everyday Button Dress`,
           `Garment sample: ${garmentSummary}`,
           `Shopper measurements: ${shopperSummary}`,
-          `Starting size label: ${region} ${labels[region]} (${size})`,
+          `Recommended clothing size from shopper measurements: ${recommended.beyondChart ? `${recommended.size} or larger` : recommended.size}`,
+          `Shopper's usual size label: ${region} ${labels[region]} (${size})`,
           `Approximate regional labels: ${regionalSizes}`,
           `Fit estimate: ${estimate.title}. ${estimate.detail}`,
           "Demo estimate only: compare the item's actual measurements; vintage fit and brand sizing vary."

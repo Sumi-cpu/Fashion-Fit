@@ -114,6 +114,55 @@
       font-size: 15px;
     }
 
+    .innovation {
+      margin: 0 0 23px;
+      padding: 20px;
+      border: 1px solid #dfe5da;
+      border-radius: 16px;
+      background: linear-gradient(115deg, #edf1e9, #f4f0e8);
+    }
+
+    .innovation-label {
+      margin: 0 0 6px;
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .innovation-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 23px;
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: 1.2;
+    }
+
+    .innovation-copy {
+      max-width: 610px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .innovation-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .innovation-step {
+      padding: 10px 11px;
+      border: 1px solid rgb(90 111 83 / 12%);
+      border-radius: 11px;
+      background: rgb(255 255 255 / 58%);
+    }
+
+    .innovation-step strong { display: block; font-size: 12px; font-weight: 700; }
+    .innovation-step span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.4; }
     .weather {
       display: flex;
       align-items: center;
@@ -406,6 +455,7 @@
     }
 
     @media (max-width: 520px) {
+      .innovation-steps { grid-template-columns: 1fr; }
       .shell { width: min(100% - 26px, 440px); padding-top: 20px; }
       .topbar { padding-bottom: 20px; }
       .intro { padding-top: 27px; }
@@ -449,6 +499,8 @@
       }
       body { background: radial-gradient(ellipse at 50% -18%, rgb(68 79 61 / 22%), transparent 36rem), var(--paper); }
       .mark { color: #20271f; }
+      .innovation { border-color: #40473d; background: linear-gradient(115deg, #283128, #302f27); }
+      .innovation-step { border-color: rgb(190 210 180 / 12%); background: rgb(255 255 255 / 4%); }
       .weather { border-color: #40473d; background: linear-gradient(105deg, #2b332a, #302f27); }
       .weather-icon { background: rgb(255 255 255 / 8%); }
       .weather-detail, .weather-source, .weather-time { color: #b4b7a9; }
@@ -482,6 +534,16 @@
       <p class="intro-copy">One great vintage shape, five different fabrics. Pick your size and find the one that feels like you.</p>
     </section>
 
+    <section class="innovation" aria-labelledby="innovation-title">
+      <p class="innovation-label">AI sizing innovation · Project concept</p>
+      <h2 class="innovation-title" id="innovation-title">A better fit for second-hand, everywhere.</h2>
+      <p class="innovation-copy">Fashion Fit is designed to sample a garment's real measurements, then use AI to compare them with a shopper's fit preferences and make confusing country-to-country size labels easier to understand. Better-informed choices can help buyers avoid the cost and hassle of a poor fit, while helping sellers spend less time and money on returns, exchanges and relisting. This demo introduces the idea with sample pieces; live AI measurement matching is not connected yet.</p>
+      <div class="innovation-steps" aria-label="How the concept works">
+        <div class="innovation-step"><strong>1. Sample the garment</strong><span>Record the item's actual measurements once.</span></div>
+        <div class="innovation-step"><strong>2. Match across sizes</strong><span>Compare garment measurements and translate regional size labels.</span></div>
+        <div class="innovation-step"><strong>3. Keep it in circulation</strong><span>Make more confident vintage choices and reduce avoidable returns and reposting.</span></div>
+      </div>
+    </section>
     <section class="weather" aria-label="Current weather">
       <div class="weather-copy">
         <span class="weather-icon" id="weather-icon" aria-hidden="true">

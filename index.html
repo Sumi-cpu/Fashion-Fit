@@ -114,6 +114,34 @@
       font-size: 15px;
     }
 
+    .qr-promo {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin: 0 0 23px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+    }
+
+    .qr-link-image {
+      display: block;
+      flex: 0 0 auto;
+      padding: 6px;
+      border: 1px solid #d8d8d2;
+      border-radius: 10px;
+      background: #fff;
+      line-height: 0;
+    }
+
+    .qr-link-image img { display: block; width: 116px; height: 116px; }
+    .qr-copy { min-width: 0; }
+    .qr-copy .innovation-label { margin-bottom: 4px; }
+    .qr-title { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 21px; font-weight: 500; letter-spacing: -.035em; line-height: 1.2; }
+    .qr-copy p:last-child { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .qr-open-link { color: var(--green); font-weight: 700; text-underline-offset: 3px; }
+
     .innovation {
       margin: 0 0 23px;
       padding: 20px;
@@ -582,6 +610,10 @@
       .shell { width: min(100% - 26px, 440px); padding-top: 20px; }
       .topbar { padding-bottom: 20px; }
       .intro { padding-top: 27px; }
+      .qr-promo { gap: 11px; padding: 12px; }
+      .qr-link-image img { width: 96px; height: 96px; }
+      .qr-title { font-size: 19px; }
+      .qr-copy p:last-child { font-size: 12px; }
       .weather { margin: 19px 0 23px; }
       .demo-grid { grid-template-columns: 1fr; }
       .demo-step { padding: 15px; }
@@ -674,6 +706,17 @@
     <section class="intro" aria-labelledby="page-title">
       <h1 id="page-title">Find your feel.</h1>
       <p class="intro-copy">One great vintage shape, five different fabrics. Pick your size and find the one that feels like you.</p>
+    </section>
+
+    <section class="qr-promo" aria-labelledby="qr-title">
+      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=32a387c070cdd1ba8b71dc61c72b4c63d8df21bb" target="_blank" rel="noopener noreferrer">
+        <img src="assets/fashion-fit-qr.png" alt="QR code to open the Fashion Fit live sizing demo">
+      </a>
+      <div class="qr-copy">
+        <p class="innovation-label">Share the live demo</p>
+        <h2 class="qr-title" id="qr-title">Scan to open Fashion Fit</h2>
+        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=32a387c070cdd1ba8b71dc61c72b4c63d8df21bb" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
+      </div>
     </section>
 
     <section class="innovation" aria-labelledby="innovation-title">

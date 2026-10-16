@@ -196,6 +196,10 @@
     }
 
     .demo-button:hover { background: #dde7d9; }
+    button:focus-visible, input:focus-visible, select:focus-visible, canvas:focus-visible {
+      outline: 3px solid #9eae9d;
+      outline-offset: 2px;
+    }
     .demo-status { min-height: 30px; margin: 8px 0 0 !important; color: #557056 !important; font-size: 10px !important; }
     .fit-result { margin: 10px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.2; }
     .fit-size-label { display: block; margin-bottom: 3px; color: var(--green); font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
@@ -216,6 +220,72 @@
       font-size: 10px;
       line-height: 1.45;
     }
+    .photo-tool {
+      margin: 0 0 24px;
+      padding: 20px;
+      border: 1px solid #dfe5da;
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .photo-tool > p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .photo-privacy {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--green-soft);
+      color: var(--ink) !important;
+      font-size: 12px !important;
+    }
+    .photo-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(150px, .8fr) minmax(150px, .8fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .photo-field { display: block; min-width: 0; color: var(--muted); font-size: 11px; font-weight: 650; }
+    .photo-field input, .photo-field select {
+      display: block;
+      width: 100%;
+      min-height: 38px;
+      margin-top: 5px;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 13px;
+    }
+    .photo-preview {
+      display: grid;
+      min-height: 170px;
+      margin-top: 13px;
+      overflow: hidden;
+      place-items: center;
+      border: 1px dashed var(--line);
+      border-radius: 11px;
+      background: rgb(128 128 128 / 5%);
+    }
+    .photo-preview canvas { display: block; width: 100%; max-height: 62vh; object-fit: contain; touch-action: manipulation; }
+    .photo-preview canvas[hidden] { display: none; }
+    .photo-placeholder { max-width: 400px; padding: 20px; color: var(--muted); text-align: center; font-size: 12px; }
+    .photo-placeholder[hidden] { display: none; }
+    .photo-step { min-height: 24px; margin: 10px 0 0; color: var(--green); font-size: 12px; font-weight: 650; }
+    .photo-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .photo-actions .demo-button { margin-top: 5px; }
+    .photo-result {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      font-size: 12px;
+    }
+    .photo-result[hidden] { display: none; }
+    .photo-result p { margin: 4px 0 0; color: var(--muted); }
+    .photo-result table { width: 100%; margin-top: 8px; border-collapse: collapse; }
+    .photo-result th, .photo-result td { padding: 5px 4px; border-bottom: 1px solid var(--line); text-align: left; font-size: 11px; }
+    .photo-result th { color: var(--muted); font-weight: 650; }
+    .fabric-card.photo-fabric-selected { outline: 3px solid var(--green); outline-offset: 2px; }
     .weather {
       display: flex;
       align-items: center;
@@ -521,6 +591,10 @@
       .demo-status { min-height: auto; font-size: 11px !important; }
       .fit-detail, .size-equivalents { font-size: 12px !important; }
       .fit-note { min-height: 84px; font-size: 12px; }
+      .photo-tool { padding: 15px; }
+      .photo-controls { grid-template-columns: 1fr; }
+      .photo-preview { min-height: 130px; }
+      .photo-placeholder { padding: 14px; }
       .controls { align-items: flex-start; flex-direction: column; gap: 11px; }
       .search-wrap { width: 100%; }
       .featured { grid-template-columns: 1fr; }
@@ -577,6 +651,10 @@
       .fabric-price { color: #e0ded3; }
       .save-button { color: #c2c0b4; }
       .save-button:hover { border-color: #4b5948; background: #30392f; color: #c6d8c0; }
+      .photo-tool { border-color: #40473d; }
+      .photo-privacy { background: #303a30; }
+      .photo-preview { background: rgb(255 255 255 / 3%); }
+      .fabric-card.photo-fabric-selected { outline-color: #95ad8f; }
       .save-button[aria-pressed="true"] { border-color: #65453d; background: #402d28; color: #e49a7e; }
     }
   </style>
@@ -657,6 +735,39 @@
           <p class="demo-status" id="circulation-status" role="status">The note can be added to a second-hand listing.</p>
         </section>
       </div>
+    </section>
+    <section class="photo-tool" aria-labelledby="photo-title">
+      <h2 id="photo-title">Compare a garment without entering body sizes</h2>
+      <p>Choose a clear, straight-overhead photo of a garment laid flat, with an A4 sheet or credit/debit card in the same plane. Mark the reference edge, then mark across the garment at the bust, waist and hip. The app estimates garment dimensions; it does not identify your body size or predict fit. You can skip the shopper-measurement panel for this comparison; its starting values are examples, and the photo path does not use them.</p>
+      <p class="photo-privacy"><strong>Private by design:</strong> your selected photo is read and measured in this browser only. It is not uploaded or saved by Fashion Fit.</p>
+      <div class="photo-controls">
+        <label class="photo-field" for="garment-photo">Choose or take a garment photo
+          <input id="garment-photo" type="file" accept="image/*" capture="environment">
+        </label>
+        <label class="photo-field" for="scale-reference">Scale reference in the photo
+          <select id="scale-reference"><option value="a4">A4 paper</option><option value="card">Credit/debit card</option></select>
+        </label>
+        <label class="photo-field" for="scale-edge">Edge to mark
+          <select id="scale-edge"><option value="29.7">A4 long edge — 29.7 cm</option><option value="21">A4 short edge — 21 cm</option></select>
+        </label>
+        <label class="photo-field" for="photo-fabric">Fabric label (confirm it yourself; optional)
+          <select id="photo-fabric">
+            <option value="">Not confirmed</option><option value="linen">Linen</option><option value="wool">Wool</option>
+            <option value="hemp">Hemp</option><option value="denim">Denim</option><option value="silk">Silk</option>
+          </select>
+        </label>
+      </div>
+      <div class="photo-preview">
+        <canvas id="garment-canvas" width="1" height="1" tabindex="0" role="img" aria-label="Garment photo marking area. Use the arrow keys to position the crosshair and Enter to mark each endpoint." hidden></canvas>
+        <div class="photo-placeholder" id="photo-placeholder">Your photo appears here and stays on this device. Use two marks for each straight reference/garment width.</div>
+      </div>
+      <p class="photo-step" id="photo-step" role="status" aria-live="polite">Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.</p>
+      <div class="photo-actions">
+        <button class="demo-button" id="restart-photo-marks" type="button" disabled>Restart measurements</button>
+      </div>
+      <div class="photo-result" id="photo-result" aria-live="polite" hidden></div>
+      <p class="demo-status" id="photo-fabric-status" role="status">No fabric is confirmed. The photo cannot reliably identify fabric.</p>
+      <p>Measurements are approximate: camera angle, wrinkles, garment stretch and mark placement affect them. A flat width is doubled to estimate circumference only when the garment is laid flat. Fabric is never inferred from appearance; check the care label or material with the seller. The photo comparison changes the shopping garment/fabric cards only, not the separate body-measurement recommendation above.</p>
     </section>
     <section class="weather" aria-label="Current weather">
       <div class="weather-copy">
@@ -1019,6 +1130,7 @@
       }
 
       document.getElementById("record-sample").addEventListener("click", () => {
+        if (!photoResult.hidden) resetPhotoMarks();
         const measurements = readMeasurements("garment", document.getElementById("garment-unit").value);
         const status = document.getElementById("sample-status");
         if (!measurements) {
@@ -1039,6 +1151,7 @@
         input.addEventListener("change", updateFitDemo);
       });
       function handleGarmentChange() {
+        if (!photoResult.hidden) resetPhotoMarks();
         const status = document.getElementById("sample-status");
         status.dataset.current = "false";
         const measurements = readMeasurements("garment", document.getElementById("garment-unit").value);
@@ -1056,6 +1169,274 @@
         input.addEventListener("change", handleGarmentChange);
       });
       updateShoppingSize(sampleMeasurements);
+      const photoInput = document.getElementById("garment-photo");
+      const photoCanvas = document.getElementById("garment-canvas");
+      const photoContext = photoCanvas.getContext("2d");
+      const photoStep = document.getElementById("photo-step");
+      const photoResult = document.getElementById("photo-result");
+      const photoPlaceholder = document.getElementById("photo-placeholder");
+      const photoRestart = document.getElementById("restart-photo-marks");
+      const scaleReference = document.getElementById("scale-reference");
+      const scaleEdge = document.getElementById("scale-edge");
+      const photoFabric = document.getElementById("photo-fabric");
+      const photoFabricStatus = document.getElementById("photo-fabric-status");
+      const photoImage = new Image();
+      const photoStages = [
+        { key: "scale", label: "scale reference edge" },
+        { key: "bust", label: "garment width at the bust/underarms" },
+        { key: "waist", label: "garment width at the waist" },
+        { key: "hip", label: "garment width at the fullest hip" }
+      ];
+      let photoObjectUrl = "";
+      let photoReady = false;
+      let photoStageIndex = 0;
+      let photoLines = {};
+      let activePhotoPoints = [];
+      let photoCursor = { x: 0.5, y: 0.5 };
+
+      function photoStageInstruction() {
+        if (!photoReady) return "Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.";
+        if (photoStageIndex >= photoStages.length) return "Photo estimate ready. Review the approximate measurements and fabric cards below.";
+        const stage = photoStages[photoStageIndex];
+        if (activePhotoPoints.length) return `Mark the second endpoint of the ${stage.label}.`;
+        if (stage.key === "scale") return `Mark both ends of the selected ${scaleEdge.options[scaleEdge.selectedIndex].text} in the photo.`;
+        return `Mark both ends of the ${stage.label}; use the same straight-across direction as the garment's laid-flat width.`;
+      }
+
+      function drawPhotoCanvas() {
+        if (!photoReady) return;
+        const width = photoCanvas.width;
+        const height = photoCanvas.height;
+        photoContext.clearRect(0, 0, width, height);
+        photoContext.drawImage(photoImage, 0, 0, width, height);
+        photoContext.lineWidth = Math.max(2, width / 500);
+        photoContext.font = `600 ${Math.max(13, width / 55)}px system-ui, sans-serif`;
+        photoContext.textBaseline = "top";
+
+        for (const stage of photoStages) {
+          const line = photoLines[stage.key];
+          if (!line) continue;
+          photoContext.strokeStyle = stage.key === "scale" ? "#e58a48" : "#2f6943";
+          photoContext.fillStyle = photoContext.strokeStyle;
+          photoContext.beginPath();
+          photoContext.moveTo(line.x1, line.y1);
+          photoContext.lineTo(line.x2, line.y2);
+          photoContext.stroke();
+          for (const point of [{ x: line.x1, y: line.y1 }, { x: line.x2, y: line.y2 }]) {
+            photoContext.beginPath();
+            photoContext.arc(point.x, point.y, Math.max(5, width / 100), 0, Math.PI * 2);
+            photoContext.fill();
+          }
+          const midpointX = (line.x1 + line.x2) / 2;
+          const midpointY = (line.y1 + line.y2) / 2;
+          photoContext.strokeStyle = "rgba(0,0,0,.7)";
+          photoContext.lineWidth = Math.max(3, width / 300);
+          photoContext.strokeText(stage.key === "scale" ? "Scale" : stage.key, midpointX + 5, midpointY + 5);
+          photoContext.fillStyle = "#fff";
+          photoContext.fillText(stage.key === "scale" ? "Scale" : stage.key, midpointX + 5, midpointY + 5);
+        }
+
+        if (activePhotoPoints.length) {
+          const first = activePhotoPoints[0];
+          photoContext.strokeStyle = "#fff";
+          photoContext.fillStyle = "#a34432";
+          photoContext.beginPath();
+          photoContext.arc(first.x, first.y, Math.max(6, width / 90), 0, Math.PI * 2);
+          photoContext.fill();
+          photoContext.stroke();
+        }
+
+        if (photoStageIndex < photoStages.length) {
+          photoContext.strokeStyle = "#20271f";
+          photoContext.lineWidth = Math.max(1, width / 900);
+          const cursorX = photoCursor.x * width;
+          const cursorY = photoCursor.y * height;
+          const arm = Math.max(9, width / 45);
+          photoContext.beginPath();
+          photoContext.moveTo(cursorX - arm, cursorY);
+          photoContext.lineTo(cursorX + arm, cursorY);
+          photoContext.moveTo(cursorX, cursorY - arm);
+          photoContext.lineTo(cursorX, cursorY + arm);
+          photoContext.stroke();
+        }
+      }
+
+      function restoreManualShoppingComparison() {
+        const currentGarment = readMeasurements("garment", document.getElementById("garment-unit").value);
+        updateShoppingSize(currentGarment || sampleMeasurements);
+      }
+
+      function resetPhotoMarks(message = "") {
+        const hadPhotoComparison = !photoResult.hidden;
+        photoStageIndex = 0;
+        photoLines = {};
+        activePhotoPoints = [];
+        photoResult.hidden = true;
+        photoResult.replaceChildren();
+        photoStep.textContent = message || photoStageInstruction();
+        photoRestart.disabled = !photoReady;
+        drawPhotoCanvas();
+        if (hadPhotoComparison) restoreManualShoppingComparison();
+      }
+
+      function updatePhotoFabricChoice() {
+        for (const card of cards) {
+          card.classList.toggle("photo-fabric-selected", card.dataset.fabric === photoFabric.value && photoFabric.value !== "");
+        }
+        if (!photoFabric.value) {
+          photoFabricStatus.textContent = "No fabric is confirmed. The photo cannot reliably identify fabric.";
+        } else {
+          const fabricName = photoFabric.options[photoFabric.selectedIndex].text;
+          photoFabricStatus.textContent = `${fabricName} selected by you. This is not detected from the image; check the care label or ask the seller.`;
+        }
+        const summary = photoResult.querySelector(".photo-fabric-summary");
+        if (summary) summary.textContent = photoFabric.value
+          ? `Fabric selected by you: ${photoFabric.options[photoFabric.selectedIndex].text}. This is not detected from the image.`
+          : "Fabric not confirmed; the photo cannot identify it.";
+      }
+
+      function photoDistance(line) {
+        return Math.hypot(line.x2 - line.x1, line.y2 - line.y1);
+      }
+
+      function showPhotoEstimate() {
+        const referenceCm = Number(scaleEdge.value);
+        const pixelsPerCm = photoDistance(photoLines.scale) / referenceCm;
+        const widths = Object.fromEntries(["bust", "waist", "hip"].map(name => [
+          name,
+          photoDistance(photoLines[name]) / pixelsPerCm
+        ]));
+        const circumferences = Object.fromEntries(Object.entries(widths).map(([name, width]) => [name, width * 2]));
+        const invalidMeasurement = Object.entries(circumferences).find(([, value]) => !Number.isFinite(value) || value < 20 || value > 200);
+        if (!Number.isFinite(pixelsPerCm) || pixelsPerCm <= 0 || invalidMeasurement) {
+          resetPhotoMarks("Those marks produced an implausible scale or garment width. Check that the reference edge is correct and the garment is flat, then mark again.");
+          return;
+        }
+
+        const garmentSize = updateShoppingSize(circumferences);
+        const unit = document.getElementById("garment-unit").value;
+        const displayValue = value => formatMeasurement(value, unit);
+        photoResult.innerHTML = `
+          <strong>Approximate garment comparison: size ${displaySize(garmentSize)}</strong>
+          <p>This is an illustrative garment-label estimate from your marks, not a body-size recommendation or fit prediction. The shopping size buttons and all visible fabric cards now use this garment estimate.</p>
+          <table><thead><tr><th>Garment area</th><th>Marked flat width</th><th>Approx. circumference (width × 2)</th></tr></thead>
+            <tbody>${["bust", "waist", "hip"].map(name =>
+              `<tr><td>${name[0].toUpperCase()}${name.slice(1)}</td><td>${displayValue(widths[name])}</td><td>${displayValue(circumferences[name])}</td></tr>`
+            ).join("")}</tbody></table>
+          <p class="photo-fabric-summary"></p>
+          <p>Camera perspective, folds, stretch and the marks can affect these estimates. Compare actual listing measurements.</p>`;
+        photoResult.hidden = false;
+        updatePhotoFabricChoice();
+        document.getElementById("garment-size-detail").textContent =
+          `Photo estimate (approximate garment circumferences): bust ${displayValue(circumferences.bust)} · waist ${displayValue(circumferences.waist)} · hip ${displayValue(circumferences.hip)}. This does not predict body fit.`;
+        photoStep.textContent = `Photo comparison ready. The cards show approximate garment size ${displaySize(garmentSize)}; body measurements and fit recommendation are unchanged.`;
+        photoRestart.disabled = false;
+      }
+
+      function markPhotoPoint(x, y) {
+        if (!photoReady || photoStageIndex >= photoStages.length) return;
+        activePhotoPoints.push({ x, y });
+        if (activePhotoPoints.length === 2) {
+          const [start, end] = activePhotoPoints;
+          const line = { x1: start.x, y1: start.y, x2: end.x, y2: end.y };
+          if (photoDistance(line) < 8) {
+            activePhotoPoints = [];
+            photoStep.textContent = "Those points are too close together. Mark both endpoints farther apart.";
+            drawPhotoCanvas();
+            return;
+          }
+          photoLines[photoStages[photoStageIndex].key] = line;
+          photoStageIndex++;
+          activePhotoPoints = [];
+          if (photoStageIndex === photoStages.length) showPhotoEstimate();
+          else photoStep.textContent = photoStageInstruction();
+        } else {
+          photoStep.textContent = photoStageInstruction();
+        }
+        drawPhotoCanvas();
+      }
+
+      photoInput.addEventListener("change", () => {
+        const file = photoInput.files[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
+          photoStep.textContent = "Choose an image file smaller than 20 MB.";
+          photoInput.value = "";
+          return;
+        }
+        resetPhotoMarks();
+        if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
+        photoReady = false;
+        photoObjectUrl = URL.createObjectURL(file);
+        photoImage.onload = () => {
+          if (photoImage.naturalWidth * photoImage.naturalHeight > 40_000_000) {
+            photoReady = false;
+            photoCanvas.hidden = true;
+            photoPlaceholder.hidden = false;
+            photoRestart.disabled = true;
+            photoStep.textContent = "This image is too large to process here. Choose a photo under 40 megapixels.";
+            URL.revokeObjectURL(photoObjectUrl);
+            photoObjectUrl = "";
+            return;
+          }
+          const scale = Math.min(1, 1800 / photoImage.naturalWidth, 1800 / photoImage.naturalHeight);
+          photoCanvas.width = Math.max(1, Math.round(photoImage.naturalWidth * scale));
+          photoCanvas.height = Math.max(1, Math.round(photoImage.naturalHeight * scale));
+          photoReady = true;
+          photoCanvas.hidden = false;
+          photoPlaceholder.hidden = true;
+          photoRestart.disabled = false;
+          photoCursor = { x: 0.5, y: 0.5 };
+          resetPhotoMarks();
+          drawPhotoCanvas();
+        };
+        photoImage.onerror = () => {
+          photoReady = false;
+          photoCanvas.hidden = true;
+          photoPlaceholder.hidden = false;
+          photoRestart.disabled = true;
+          photoStep.textContent = "That image could not be opened. Try another image file.";
+          URL.revokeObjectURL(photoObjectUrl);
+          photoObjectUrl = "";
+        };
+        photoImage.src = photoObjectUrl;
+      });
+
+      photoCanvas.addEventListener("pointerdown", event => {
+        const bounds = photoCanvas.getBoundingClientRect();
+        photoCursor = {
+          x: Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width)),
+          y: Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height))
+        };
+        markPhotoPoint(photoCursor.x * photoCanvas.width, photoCursor.y * photoCanvas.height);
+      });
+      photoCanvas.addEventListener("keydown", event => {
+        const amount = event.shiftKey ? 0.05 : 0.01;
+        if (event.key === "ArrowLeft") photoCursor.x = Math.max(0, photoCursor.x - amount);
+        else if (event.key === "ArrowRight") photoCursor.x = Math.min(1, photoCursor.x + amount);
+        else if (event.key === "ArrowUp") photoCursor.y = Math.max(0, photoCursor.y - amount);
+        else if (event.key === "ArrowDown") photoCursor.y = Math.min(1, photoCursor.y + amount);
+        else if (event.key === "Enter" && photoStageIndex < photoStages.length) {
+          event.preventDefault();
+          markPhotoPoint(photoCursor.x * photoCanvas.width, photoCursor.y * photoCanvas.height);
+          return;
+        } else return;
+        event.preventDefault();
+        drawPhotoCanvas();
+      });
+      photoRestart.addEventListener("click", () => resetPhotoMarks());
+      scaleReference.addEventListener("change", () => {
+        scaleEdge.innerHTML = scaleReference.value === "a4"
+          ? '<option value="29.7">A4 long edge — 29.7 cm</option><option value="21">A4 short edge — 21 cm</option>'
+          : '<option value="8.56">Card long edge — 8.56 cm</option><option value="5.398">Card short edge — 5.398 cm</option>';
+        resetPhotoMarks();
+      });
+      scaleEdge.addEventListener("change", () => resetPhotoMarks());
+      photoFabric.addEventListener("change", updatePhotoFabricChoice);
+      updatePhotoFabricChoice();
+      window.addEventListener("beforeunload", () => {
+        if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
+      });
       document.getElementById("download-fit-note").addEventListener("click", () => {
         const note = document.getElementById("fit-note").value;
         const status = document.getElementById("circulation-status");

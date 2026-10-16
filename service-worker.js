@@ -1,4 +1,4 @@
-const CACHE = "fashion-fit-v2";
+const CACHE = "fashion-fit-v3";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {

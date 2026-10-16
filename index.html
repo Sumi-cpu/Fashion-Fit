@@ -738,17 +738,14 @@
     </section>
     <section class="photo-tool" aria-labelledby="photo-title">
       <h2 id="photo-title">Compare a garment without entering body sizes</h2>
-      <p>Choose a clear, straight-overhead photo of a garment laid flat, with an A4 sheet or credit/debit card in the same plane. Mark the reference edge, then mark across the garment at the bust, waist and hip. The app estimates garment dimensions; it does not identify your body size or predict fit. You can skip the shopper-measurement panel for this comparison; its starting values are examples, and the photo path does not use them.</p>
+      <p>Choose a clear, straight-overhead photo of a garment laid flat, with an A4 sheet in the same plane. Use its long edge (29.7 cm) or short edge (21 cm) as the scale reference, then mark across the garment at the bust, waist and hip. The app estimates garment dimensions; it does not identify your body size or predict fit. You can skip the shopper-measurement panel for this comparison; its starting values are examples, and the photo path does not use them.</p>
       <p class="photo-privacy"><strong>Private by design:</strong> your selected photo is read and measured in this browser only. It is not uploaded or saved by Fashion Fit.</p>
       <div class="photo-controls">
         <label class="photo-field" for="garment-photo">Choose or take a garment photo
           <input id="garment-photo" type="file" accept="image/*" capture="environment">
         </label>
-        <label class="photo-field" for="scale-reference">Scale reference in the photo
-          <select id="scale-reference"><option value="a4">A4 paper</option><option value="card">Credit/debit card</option></select>
-        </label>
-        <label class="photo-field" for="scale-edge">Edge to mark
-          <select id="scale-edge"><option value="29.7">A4 long edge — 29.7 cm</option><option value="21">A4 short edge — 21 cm</option></select>
+        <label class="photo-field" for="scale-edge">A4 edge to mark
+          <select id="scale-edge"><option value="long">Long edge — 29.7 cm</option><option value="short">Short edge — 21 cm</option></select>
         </label>
         <label class="photo-field" for="photo-fabric">Fabric label (confirm it yourself; optional)
           <select id="photo-fabric">
@@ -1176,8 +1173,8 @@
       const photoResult = document.getElementById("photo-result");
       const photoPlaceholder = document.getElementById("photo-placeholder");
       const photoRestart = document.getElementById("restart-photo-marks");
-      const scaleReference = document.getElementById("scale-reference");
       const scaleEdge = document.getElementById("scale-edge");
+      const a4EdgeLengthsCm = new Map([["long", 29.7], ["short", 21]]);
       const photoFabric = document.getElementById("photo-fabric");
       const photoFabricStatus = document.getElementById("photo-fabric-status");
       const photoImage = new Image();
@@ -1300,7 +1297,7 @@
       }
 
       function showPhotoEstimate() {
-        const referenceCm = Number(scaleEdge.value);
+        const referenceCm = a4EdgeLengthsCm.get(scaleEdge.value);
         const pixelsPerCm = photoDistance(photoLines.scale) / referenceCm;
         const widths = Object.fromEntries(["bust", "waist", "hip"].map(name => [
           name,
@@ -1308,7 +1305,7 @@
         ]));
         const circumferences = Object.fromEntries(Object.entries(widths).map(([name, width]) => [name, width * 2]));
         const invalidMeasurement = Object.entries(circumferences).find(([, value]) => !Number.isFinite(value) || value < 20 || value > 200);
-        if (!Number.isFinite(pixelsPerCm) || pixelsPerCm <= 0 || invalidMeasurement) {
+        if (!Number.isFinite(referenceCm) || !Number.isFinite(pixelsPerCm) || pixelsPerCm <= 0 || invalidMeasurement) {
           resetPhotoMarks("Those marks produced an implausible scale or garment width. Check that the reference edge is correct and the garment is flat, then mark again.");
           return;
         }
@@ -1425,12 +1422,6 @@
         drawPhotoCanvas();
       });
       photoRestart.addEventListener("click", () => resetPhotoMarks());
-      scaleReference.addEventListener("change", () => {
-        scaleEdge.innerHTML = scaleReference.value === "a4"
-          ? '<option value="29.7">A4 long edge — 29.7 cm</option><option value="21">A4 short edge — 21 cm</option>'
-          : '<option value="8.56">Card long edge — 8.56 cm</option><option value="5.398">Card short edge — 5.398 cm</option>';
-        resetPhotoMarks();
-      });
       scaleEdge.addEventListener("change", () => resetPhotoMarks());
       photoFabric.addEventListener("change", updatePhotoFabricChoice);
       updatePhotoFabricChoice();

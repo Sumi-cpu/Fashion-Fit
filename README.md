@@ -27,5 +27,5 @@ The app is a single `index.html` file with no build step or app dependencies. Gi
 ## Open or share the live demo
 
 Scan the QR code near the top of the app, or use the cache-busted live URL:
-<https://sumi-cpu.github.io/Fashion-Fit/?v=32a387c070cdd1ba8b71dc61c72b4c63d8df21bb>.
+<https://sumi-cpu.github.io/Fashion-Fit/?v=0ac715a1168c4c7afbd7b78b51be611ddb71f5df>.
 The high-contrast QR image is tracked at [`assets/fashion-fit-qr.png`](assets/fashion-fit-qr.png).

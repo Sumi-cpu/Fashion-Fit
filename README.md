@@ -1,26 +1,31 @@
 # Fashion Fit
 
-Fashion Fit is a second-hand and vintage clothing sizing demo. It shows how garment measurements can make unfamiliar regional size labels easier to compare, helping shoppers and sellers make more confident choices.
+Fashion Fit is a second-hand and vintage clothing sizing demo for both shoppers and sellers. Buyers can compare a second-hand find with a garment they know fits. Sellers can photograph a listing garment, review approximate photo measurements, and save measurements they confirm. It compares garments—not a person's photo or body measurements.
 
 ## Try the sample sizing demo
 
 1. Edit the sample dress's measurements and choose centimetres or inches. The shopping-size cards update; select **Record garment sample** to use it in this separate demo.
-2. Optionally enter body measurements and select a usual size and label region. This illustrative body-size path is separate from buyer photo comparison.
-3. Review the approximate sample garment size, body-size recommendation and fit estimate. The regional equivalents and sample chart are illustrative—not universal or brand-specific.
+2. Optionally enter body measurements and select a usual size and label region. This illustrative sample-size path is separate from both camera workflows.
+3. Review the approximate sample garment size, body-size recommendation and fit estimate. Regional equivalents and the sample chart are illustrative—not universal or brand-specific.
 4. Select **Download fit note** to save a text note for a listing.
 
-## Compare a second-hand find while shopping
+## Seller camera workflow
 
-Use the buyer-side photo tool to compare a target garment with an item you own and know fits. It compares garment measurements, not a person's body measurements.
+Choose **Seller · measure a listing** in the camera tools to take a photo or choose an image of the listing garment. Lay it flat with a flat A4 sheet in the same plane. A4 is the only supported scale; mark the visible long edge (29.7 cm) or short edge (21 cm), then the endpoints of any applicable garment widths. Skip areas that do not apply. Click or tap the image, or use the arrow keys and Enter.
 
-1. Enter actual circumference measurements for one or more areas of a garment you know fits, then select **Save reference on this device**. Values stay in this browser's local storage on this device only; they are not synced to other devices. Clear them with **Clear saved reference**.
-2. Lay the target garment flat and take a straight-overhead, well-lit photo with a flat A4 sheet in the same plane. A4 is the only supported scale reference.
-3. Choose the photo (or take one on a supported device), select the A4 edge visible in it (long: 29.7 cm; short: 21 cm), and mark each pair of endpoints: the scale edge, then any applicable target garment widths. Skip areas that do not apply. Click/tap the points or focus the image and use arrow keys and Enter.
-4. Review the estimated target circumferences and differences from matching saved measurements. Areas without a saved reference are explicitly not compared; without a matching baseline the app reports that it cannot assess fit.
+Photo-derived circumferences are only drafts. Use **Use photo estimates as seller draft values** if useful, then check each value against the garment label or a tape and save only measurements you confirm. One seller listing profile is stored separately in this browser's local storage on this device; replace or clear it before recording another item. Fabric is never identified from the photo; a seller may optionally select fabric they have confirmed manually. Select **Remove seller photo** to clear it from this browser session; this does not delete the original file from the device.
 
-The image is processed locally in the browser and is not uploaded or saved by Fashion Fit; images over 40 megapixels are rejected. Select **Remove photo** to clear it from this browser session; this does not delete the original file from your device. Only photograph the garment and scale reference—never photograph or infer measurements from a person, child or baby. This user-marked estimate is approximate, not automatic image recognition or a fit guarantee. Camera perspective, style, material, stretch, wrinkles and mark placement affect results. Doubling a flat width estimates circumference only when the garment lies flat without overlap. Check the listing's actual measurements and fit preferences. The photo path does not change the separate sample-size demo.
+## Buyer camera workflow
 
-The sample garment and body-measurement tools use transparent, illustrative rules and approximate size conversions. They are prototypes—not a connected or trained AI model, a brand-specific size chart, or a guarantee of fit. No entered measurements are uploaded.
+Choose **Buyer · compare a find** to photograph a second-hand target garment while shopping. Save actual circumference measurements for one or more areas of a garment you own and know fits, then mark the target garment and flat A4 sheet as described above. Select **Remove buyer photo** to clear the image from this browser session, or **Clear buyer reference** to erase the saved reference.
+
+The comparison shows a fit estimate only for dimensions measured on the target and saved for the buyer reference. If no dimensions match, the app says it cannot assess fit. Buyer references and seller-confirmed listing measurements use separate local profiles; neither is synced to another device. Do not photograph or enter measurements for a person, child, or baby in either camera workflow.
+
+## Photo measurement limitations and privacy
+
+Images are processed locally in the browser, are not uploaded or saved by Fashion Fit, and must be smaller than 20 MB and 40 megapixels. These user-marked estimates are approximate—not automatic image recognition or a fit guarantee. Perspective, camera angle, clothing construction, style, material, stretch, folds and mark placement affect results. Doubling a flat width estimates circumference only when the garment lies flat without overlap. Compare actual listing measurements and fit preferences. No photo feature identifies fabric or infers a person's measurements.
+
+The separate sample garment and body-measurement demo uses transparent, illustrative rules and approximate size conversions. It is not a connected or trained AI model, a brand-specific size chart, or a guarantee of fit.
 
 ## Original optional soundtrack
 
@@ -31,5 +36,5 @@ The app is a single `index.html` file with no build step or app dependencies. Gi
 ## Open or share the live demo
 
 Scan the QR code near the top of the app, or use the cache-busted live URL:
-<https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-fit-20261016>.
+<https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-seller-camera-20261016>.
 The high-contrast QR image is tracked at [`assets/fashion-fit-qr.png`](assets/fashion-fit-qr.png).

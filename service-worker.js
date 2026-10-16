@@ -1,4 +1,4 @@
-const CACHE = "fashion-fit-v7";
+const CACHE = "fashion-fit-v8";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./assets/fashion-fit-qr.png"];
 
 self.addEventListener("install", (event) => {

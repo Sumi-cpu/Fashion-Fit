@@ -200,6 +200,7 @@
     .fit-result { margin: 10px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.2; }
     .fit-size-label { display: block; margin-bottom: 3px; color: var(--green); font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
     .fit-detail, .size-equivalents { margin: 5px 0 0 !important; color: var(--muted); font-size: 10px !important; line-height: 1.5 !important; }
+    .garment-size-detail { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
     .fit-note {
       display: block;
       width: 100%;
@@ -604,7 +605,7 @@
       <div class="demo-grid" aria-label="Interactive garment sizing demo">
         <section class="demo-step" aria-labelledby="sample-title">
           <h3 id="sample-title">1. Sample the garment</h3>
-          <p>Measure the garment around its fullest points. Edit the sample values to try it.</p>
+          <p>Measure the garment around its fullest points. A size label is estimated from these measurements and updates the shopping display.</p>
           <div class="measurement-fields">
             <label for="garment-bust">Bust<input class="measurement-input garment-measurement" id="garment-bust" type="number" min="20" max="200" step="0.5" value="96" inputmode="decimal"></label>
             <label for="garment-waist">Waist<input class="measurement-input garment-measurement" id="garment-waist" type="number" min="20" max="200" step="0.5" value="82" inputmode="decimal"></label>
@@ -616,7 +617,7 @@
             </label>
           </div>
           <button class="demo-button" id="record-sample" type="button">Record garment sample</button>
-          <p class="demo-status" id="sample-status" data-current="true" role="status">Sample dress is ready to compare. Edit measurements and record to update it.</p>
+          <p class="demo-status" id="sample-status" data-current="true" role="status">Sample dress is ready to compare. The approximate shopping size follows valid edits; record them to update the fit comparison.</p>
         </section>
 
         <section class="demo-step" aria-labelledby="shopper-title">
@@ -646,6 +647,7 @@
           <h3 id="circulation-title">3. Keep it in circulation</h3>
           <p>Give the next buyer a useful fit note to reduce guesswork and avoidable returns.</p>
           <p class="fit-result" id="fit-result" aria-live="polite"><span class="fit-size-label">Recommended size</span>Ready to compare</p>
+          <p class="fit-size-label">Garment-to-shopper fit</p>
           <p class="fit-detail" id="fit-detail">Enter shopper measurements to estimate a clothing size.</p>
           <p class="size-equivalents" id="size-equivalents">Approximate label equivalents will appear here.</p>
           <label class="demo-select-label" for="fit-note">Seller listing fit note
@@ -694,9 +696,10 @@
           <h3 class="item-title">The Everyday<br>Button Dress</h3>
           <p class="item-description">A breathable, broken-in classic in warm natural cotton.</p>
           <div class="item-meta">
-            <span class="meta-pill current-size">Size M</span>
+            <span class="meta-pill current-size">Approx. size M</span>
             <span>Good vintage condition</span>
           </div>
+          <p class="garment-size-detail" id="garment-size-detail">Approximate size inferred from the sample: bust 96.0 cm · waist 82.0 cm · hip 104.0 cm. Compare the actual measurements; label inference is approximate.</p>
           <div class="price-line"><span class="price">$34</span><span class="old-price">$68 new</span></div>
         </div>
       </article>
@@ -705,11 +708,11 @@
     <section aria-labelledby="alternatives-heading">
       <div class="section-heading alternatives-heading">
         <h2 id="alternatives-heading">Same shape, other feels</h2>
-        <span class="section-count" id="result-count">5 fabrics · size M</span>
+        <span class="section-count" id="result-count">5 fabrics · shopping size M</span>
       </div>
       <div class="controls">
         <div class="size-control">
-          <span class="control-label">Your size</span>
+          <span class="control-label">Shopping size</span>
           <div class="sizes" role="group" aria-label="Choose clothing size">
             <button class="size-button" type="button" data-size="XS" aria-pressed="false">XS</button>
             <button class="size-button" type="button" data-size="S" aria-pressed="false">S</button>
@@ -818,7 +821,6 @@
   <script>
     (() => {
       const sizeButtons = [...document.querySelectorAll(".size-button")];
-      const sizeLabels = document.querySelectorAll(".current-size, .size-fit");
       const cards = [...document.querySelectorAll(".fabric-card")];
       const search = document.getElementById("fabric-search");
       const resultCount = document.getElementById("result-count");
@@ -833,7 +835,7 @@
           card.hidden = !matches;
           if (matches) visible++;
         }
-        resultCount.textContent = `${visible} ${visible === 1 ? "fabric" : "fabrics"} · size ${selectedSize}`;
+        resultCount.textContent = `${visible} ${visible === 1 ? "fabric" : "fabrics"} · shopping size ${selectedSize}`;
         emptyState.classList.toggle("visible", visible === 0);
       }
 
@@ -841,9 +843,6 @@
         button.addEventListener("click", () => {
           selectedSize = button.dataset.size;
           sizeButtons.forEach(option => option.setAttribute("aria-pressed", String(option === button)));
-          sizeLabels.forEach(label => {
-            label.textContent = label.classList.contains("size-fit") ? `Fits ${selectedSize}` : `Size ${selectedSize}`;
-          });
           updateVisibleCards();
         });
       });
@@ -867,6 +866,7 @@
       };
       const minimumEase = { bust: 6, waist: 4, hip: 6 };
       const maximumEase = { bust: 18, waist: 14, hip: 20 };
+      const typicalGarmentEase = { bust: 8, waist: 6, hip: 8 };
       const bodySizeUpperBounds = [
         { size: "XS", bust: 82, waist: 66, hip: 90 },
         { size: "S", bust: 88, waist: 72, hip: 96 },
@@ -922,6 +922,37 @@
         };
       }
 
+      function getApproximateGarmentSize(garment) {
+        const estimatedBody = Object.fromEntries(measurementNames.map(name => [
+          name,
+          Math.max(0, garment[name] - typicalGarmentEase[name])
+        ]));
+        return getRecommendedSize(estimatedBody);
+      }
+
+      function displaySize(estimate) {
+        return `${estimate.size}${estimate.beyondChart ? "+" : ""}`;
+      }
+
+      function updateShoppingSize(garment) {
+        const estimate = getApproximateGarmentSize(garment);
+        selectedSize = estimate.size;
+        sizeButtons.forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.size === selectedSize));
+        });
+        const label = `Approx. size ${displaySize(estimate)}`;
+        document.querySelectorAll(".current-size, .size-fit").forEach(element => {
+          element.textContent = label;
+        });
+        const garmentUnit = document.getElementById("garment-unit").value;
+        document.getElementById("garment-size-detail").textContent =
+          `Approximate size inferred from the sample: ${measurementNames.map(name =>
+            `${name}: ${formatMeasurement(garment[name], garmentUnit)}`
+          ).join(" · ")}. Compare the actual measurements; label inference is approximate.`;
+        updateVisibleCards();
+        return estimate;
+      }
+
       function updateFitDemo() {
         const bodyUnit = document.getElementById("body-unit").value;
         const body = readMeasurements("body", bodyUnit);
@@ -948,7 +979,7 @@
         const recommended = getRecommendedSize(body);
         const recommendedLabels = regionSizes[recommended.size];
         const regionalSizes = `US ${recommendedLabels.US} · UK ${recommendedLabels.UK} · EU ${recommendedLabels.EU} · AU ${recommendedLabels.AU}`;
-        recommendation.textContent = "Recommended clothing size";
+        recommendation.textContent = "Body-size recommendation";
         result.lastChild.textContent = recommended.beyondChart ? `${recommended.size} or larger` : recommended.size;
         equivalents.textContent = `From your measurements: ${region} ${recommendedLabels[region]} (${recommended.size}). Other approximate labels: ${regionalSizes}. You usually shop ${region} ${labels[region]} (${size}). Brand sizing varies.`;
         shopperStatus.textContent = `Reading body measurements in ${bodyUnit}; comparing the garment in centimetres.`;
@@ -956,17 +987,17 @@
         const sampleStatus = document.getElementById("sample-status");
         const sampleIsCurrent = sampleStatus.dataset.current === "true";
         if (!sampleIsCurrent) {
-          recommendation.textContent = "Recommended clothing size";
+          recommendation.textContent = "Body-size recommendation";
           result.lastChild.textContent = recommended.beyondChart ? `${recommended.size} or larger` : recommended.size;
-          detail.textContent = "Save the edited garment measurements before comparing sizes.";
+          detail.textContent = "Record the edited sample to refresh this garment-to-shopper fit comparison.";
           note.value = "Record the garment sample to create a fit note.";
           return;
         }
 
         const estimate = getFitEstimate(sampleMeasurements, body);
-        recommendation.textContent = "Recommended clothing size";
+        recommendation.textContent = "Body-size recommendation";
         result.lastChild.textContent = recommended.beyondChart ? `${recommended.size} or larger` : recommended.size;
-        detail.textContent = `Sampled garment: ${estimate.title.toLowerCase()}. ${estimate.detail}`;
+        detail.textContent = `${estimate.title}. ${estimate.detail}`;
         const garmentUnit = document.getElementById("garment-unit").value;
         const garmentSummary = measurementNames.map(name =>
           `${name}: ${formatMeasurement(sampleMeasurements[name], garmentUnit)}`
@@ -977,12 +1008,13 @@
         note.value = [
           `Fashion Fit vintage fit note — The Everyday Button Dress`,
           `Garment sample: ${garmentSummary}`,
+          `Approximate garment size inferred from measurements: ${displaySize(getApproximateGarmentSize(sampleMeasurements))} (approximate)`,
           `Shopper measurements: ${shopperSummary}`,
-          `Recommended clothing size from shopper measurements: ${recommended.beyondChart ? `${recommended.size} or larger` : recommended.size}`,
+          `Body-size recommendation from shopper measurements: ${recommended.beyondChart ? `${recommended.size} or larger` : recommended.size}`,
           `Shopper's usual size label: ${region} ${labels[region]} (${size})`,
           `Approximate regional labels: ${regionalSizes}`,
-          `Fit estimate: ${estimate.title}. ${estimate.detail}`,
-          "Demo estimate only: compare the item's actual measurements; vintage fit and brand sizing vary."
+          `Garment-to-shopper fit estimate: ${estimate.title}. ${estimate.detail}`,
+          "Demo estimate only: compare the item's actual measurements; garment-size inference is approximate and vintage fit and brand sizing vary."
         ].join("\n");
       }
 
@@ -996,8 +1028,9 @@
           return;
         }
         sampleMeasurements = measurements;
+        const garmentSize = updateShoppingSize(sampleMeasurements);
         status.dataset.current = "true";
-        status.textContent = "Garment sample recorded for this demo.";
+        status.textContent = `Garment sample recorded. Approximate shopping size ${displaySize(garmentSize)} updated.`;
         updateFitDemo();
       });
 
@@ -1005,18 +1038,24 @@
         input.addEventListener("input", updateFitDemo);
         input.addEventListener("change", updateFitDemo);
       });
+      function handleGarmentChange() {
+        const status = document.getElementById("sample-status");
+        status.dataset.current = "false";
+        const measurements = readMeasurements("garment", document.getElementById("garment-unit").value);
+        if (measurements) {
+          const estimate = updateShoppingSize(measurements);
+          status.textContent = `Edited sample preview: approximate shopping size ${displaySize(estimate)}. Record it to refresh the fit comparison.`;
+        } else {
+          status.textContent = "Enter valid bust, waist and hip measurements. Shopping size stays at the last valid sample.";
+        }
+        updateFitDemo();
+      }
+
       document.querySelectorAll(".garment-measurement, #garment-unit").forEach(input => {
-        input.addEventListener("input", () => {
-          document.getElementById("sample-status").dataset.current = "false";
-          document.getElementById("sample-status").textContent = "Measurements changed. Record the sample to update the fit.";
-          updateFitDemo();
-        });
-        input.addEventListener("change", () => {
-          document.getElementById("sample-status").dataset.current = "false";
-          document.getElementById("sample-status").textContent = "Measurements changed. Record the sample to update the fit.";
-          updateFitDemo();
-        });
+        input.addEventListener("input", handleGarmentChange);
+        input.addEventListener("change", handleGarmentChange);
       });
+      updateShoppingSize(sampleMeasurements);
       document.getElementById("download-fit-note").addEventListener("click", () => {
         const note = document.getElementById("fit-note").value;
         const status = document.getElementById("circulation-status");

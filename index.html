@@ -273,6 +273,23 @@
       box-shadow: var(--shadow);
     }
     .photo-tool > p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .photo-role-switch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .photo-role-button {
+      min-height: 38px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .photo-role-button[aria-pressed="true"] { border-color: var(--green); background: var(--green-soft); }
+    .photo-role-panel { margin-top: 13px; }
+    .photo-role-panel[hidden] { display: none; }
+    .photo-role-panel > p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
     .reference-profile {
       margin-top: 14px;
       padding: 14px;
@@ -288,6 +305,17 @@
       gap: 9px;
       margin-top: 10px;
     }
+    .seller-measurements {
+      margin-top: 13px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgb(128 128 128 / 4%);
+    }
+    .seller-measurements h3 { margin: 0; font-size: 13px; }
+    .seller-measurements > p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .seller-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 10px; }
+    .photo-role-panel .photo-field { margin-top: 10px; }
     .photo-safety { font-size: 12px !important; }
     .photo-privacy {
       padding: 10px 12px;
@@ -296,12 +324,7 @@
       color: var(--ink) !important;
       font-size: 12px !important;
     }
-    .photo-controls {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(150px, .8fr) minmax(150px, .8fr);
-      gap: 10px;
-      margin-top: 14px;
-    }
+    .photo-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, .7fr); gap: 10px; margin-top: 14px; }
     .photo-field { display: block; min-width: 0; color: var(--muted); font-size: 11px; font-weight: 650; }
     .photo-field input, .photo-field select {
       display: block;
@@ -661,6 +684,7 @@
       .photo-tool { padding: 15px; }
       .photo-controls { grid-template-columns: 1fr; }
       .reference-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .seller-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .photo-preview { min-height: 130px; }
       .photo-placeholder { padding: 14px; }
       .controls { align-items: flex-start; flex-direction: column; gap: 11px; }
@@ -751,24 +775,24 @@
 
     <section class="intro" aria-labelledby="page-title">
       <h1 id="page-title">Find your feel.</h1>
-      <p class="intro-copy">Compare a second-hand find with a garment you already know fits. Your measurements stay yours; no single size chart fits everyone.</p>
+      <p class="intro-copy">Buyers compare second-hand finds with a garment they know fits; sellers photograph listings and confirm garment measurements. Your measurements stay yours—no single size chart fits everyone.</p>
     </section>
 
     <section class="qr-promo" aria-labelledby="qr-title">
-      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-fit-20261016" target="_blank" rel="noopener noreferrer">
+      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-seller-camera-20261016" target="_blank" rel="noopener noreferrer">
         <img src="assets/fashion-fit-qr.png" alt="QR code to open the Fashion Fit live sizing demo">
       </a>
       <div class="qr-copy">
         <p class="innovation-label">Share the live demo</p>
         <h2 class="qr-title" id="qr-title">Scan to open Fashion Fit</h2>
-        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-fit-20261016" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
+        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-seller-camera-20261016" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
       </div>
     </section>
 
     <section class="innovation" aria-labelledby="innovation-title">
       <p class="innovation-label">AI sizing innovation · Project concept</p>
       <h2 class="innovation-title" id="innovation-title">A better fit for second-hand, everywhere.</h2>
-      <p class="innovation-copy">Explore the sample garment and optional body-measurement demo below. For buyer-side shopping, use the photo tool to compare a second-hand item with a garment you know fits. This runs locally with illustrative sizing rules; it is not a trained AI model or a universal size chart.</p>
+      <p class="innovation-copy">Explore the sample garment and optional body-measurement demo below. Sellers can photograph a listing garment and confirm its measurements; buyers can compare a second-hand find with a garment they know fits. Camera measurements run locally and are approximate—not a trained AI model or a universal size chart.</p>
       <div class="demo-grid" aria-label="Interactive garment sizing demo">
         <section class="demo-step" aria-labelledby="sample-title">
           <h3 id="sample-title">1. Sample the garment</h3>
@@ -826,60 +850,99 @@
       </div>
     </section>
     <section class="photo-tool" aria-labelledby="photo-title">
-      <h2 id="photo-title">Check a second-hand find while shopping</h2>
-      <p>Use a garment you own and know fits as your personal reference, then photograph the item you are considering. Lay the target garment flat with an A4 sheet in the same plane. This is a garment-only tool: do not photograph or enter measurements for a person, child, or baby. It compares only dimensions you have saved and does not use the sample body measurements above.</p>
-      <div class="reference-profile" aria-labelledby="reference-title">
-        <h3 id="reference-title">Your known-fit garment</h3>
-        <p>Enter its actual circumference measurements from a label or your own tape measurement. You can save one or more areas; only matching saved areas can be compared.</p>
-        <div class="reference-fields">
-          <label class="photo-field" for="reference-bust">Bust / chest circumference
-            <input id="reference-bust" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
-          </label>
-          <label class="photo-field" for="reference-waist">Waist circumference
-            <input id="reference-waist" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
-          </label>
-          <label class="photo-field" for="reference-hip">Hip circumference
-            <input id="reference-hip" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
-          </label>
-          <label class="photo-field" for="reference-unit">Unit
-            <select id="reference-unit"><option value="cm">Centimetres (cm)</option><option value="in">Inches (in)</option></select>
-          </label>
-        </div>
-        <div class="photo-actions">
-          <button class="demo-button" id="save-reference" type="button">Save reference on this device</button>
-          <button class="demo-button" id="clear-reference" type="button">Clear saved reference</button>
-        </div>
-        <p class="demo-status" id="reference-status" role="status" aria-live="polite">No known-fit garment measurements saved yet.</p>
+      <h2 id="photo-title">Camera tools for sellers and buyers</h2>
+      <p>Choose your role for role-specific instructions and separate saved measurements. Both workflows use an A4 sheet as the only photo scale; neither uses a person's photo or body measurements.</p>
+      <div class="photo-role-switch" role="group" aria-label="Choose camera workflow">
+        <button class="photo-role-button" id="buyer-role-button" type="button" data-photo-role="buyer" aria-pressed="true">Buyer · compare a find</button>
+        <button class="photo-role-button" id="seller-role-button" type="button" data-photo-role="seller" aria-pressed="false">Seller · measure a listing</button>
       </div>
-      <p class="photo-privacy"><strong>Private by design:</strong> the photo is processed locally in this browser only and is not uploaded or saved by Fashion Fit. Your reference measurements are saved only in this browser's local storage on this device; they are not synced across devices. Select <strong>Remove photo</strong> to clear the photo from this session, or <strong>Clear saved reference</strong> to erase the saved measurements. Removing a photo does not delete its original file from your device.</p>
-      <div class="photo-controls">
-        <label class="photo-field" for="garment-photo">Take or choose a photo of the target garment only
-          <input id="garment-photo" type="file" accept="image/*" capture="environment" aria-describedby="photo-safety">
+      <section class="photo-role-panel" id="buyer-photo-panel" aria-labelledby="buyer-photo-heading">
+        <h3 id="buyer-photo-heading">Buyer camera workflow</h3>
+        <p>While shopping, photograph the target garment you are considering. Compare its approximate photo-derived circumferences only with measurements saved for your own known-fit garment. Keep both garments separate; the sample body-measurement demo is not used.</p>
+        <div class="reference-profile" aria-labelledby="reference-title">
+          <h3 id="reference-title">Your known-fit garment · buyer reference</h3>
+          <p>Enter actual circumference measurements from its label or a tape. Save at least one area; only matching saved areas can be compared.</p>
+          <div class="reference-fields">
+            <label class="photo-field" for="reference-bust">Bust / chest circumference
+              <input id="reference-bust" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+            </label>
+            <label class="photo-field" for="reference-waist">Waist circumference
+              <input id="reference-waist" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+            </label>
+            <label class="photo-field" for="reference-hip">Hip circumference
+              <input id="reference-hip" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+            </label>
+            <label class="photo-field" for="reference-unit">Buyer reference unit
+              <select id="reference-unit"><option value="cm">Centimetres (cm)</option><option value="in">Inches (in)</option></select>
+            </label>
+          </div>
+          <div class="photo-actions">
+            <button class="demo-button" id="save-reference" type="button">Save buyer reference on this device</button>
+            <button class="demo-button" id="clear-reference" type="button">Clear buyer reference</button>
+          </div>
+          <p class="demo-status" id="reference-status" role="status" aria-live="polite">No buyer reference garment measurements saved yet.</p>
+        </div>
+        <label class="photo-field" for="buyer-garment-photo">Take a photo or choose an image of the target garment only
+          <input id="buyer-garment-photo" type="file" accept="image/*" capture="environment" aria-describedby="buyer-photo-safety">
         </label>
-        <label class="photo-field" for="scale-edge">A4 edge to mark
-          <select id="scale-edge"><option value="long">Long edge — 29.7 cm</option><option value="short">Short edge — 21 cm</option></select>
+        <p class="photo-safety" id="buyer-photo-safety">Lay the target garment flat with a flat A4 sheet in the same plane. Keep people and identifying details out of the image; never photograph or measure a person, child, or baby.</p>
+        <button class="demo-button photo-remove" id="buyer-remove-photo" type="button" disabled>Remove buyer photo</button>
+      </section>
+      <section class="photo-role-panel" id="seller-photo-panel" aria-labelledby="seller-photo-heading" hidden>
+        <h3 id="seller-photo-heading">Seller camera workflow</h3>
+        <p>For a second-hand listing, lay the garment flat with a flat A4 sheet in the same plane. Mark the scale and garment widths, then review the approximate photo-derived values. Confirm or replace them using the garment label or a tape before saving listing measurements.</p>
+        <label class="photo-field" for="seller-garment-photo">Take a photo or choose an image of the listing garment only
+          <input id="seller-garment-photo" type="file" accept="image/*" capture="environment" aria-describedby="seller-photo-safety">
         </label>
-        <label class="photo-field" for="photo-fabric">Fabric label (confirm it yourself; optional)
+        <p class="photo-safety" id="seller-photo-safety">Include the whole garment and flat A4 sheet. Keep people and identifying details out of the image; never photograph or enter measurements for a person.</p>
+        <div class="seller-measurements" aria-labelledby="seller-measurements-title">
+          <h3 id="seller-measurements-title">Confirmed seller / listing measurements</h3>
+          <p>Enter actual garment circumferences from a label or tape. Photo estimates stay drafts until you check and save them. One seller listing profile is stored in this browser on this device; replace or clear it before recording another item.</p>
+          <div class="seller-fields">
+            <label class="photo-field" for="listing-bust">Bust / chest circumference
+              <input id="listing-bust" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+            </label>
+            <label class="photo-field" for="listing-waist">Waist circumference
+              <input id="listing-waist" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+            </label>
+            <label class="photo-field" for="listing-hip">Hip circumference
+              <input id="listing-hip" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+            </label>
+            <label class="photo-field" for="listing-unit">Listing measurement unit
+              <select id="listing-unit"><option value="cm">Centimetres (cm)</option><option value="in">Inches (in)</option></select>
+            </label>
+          </div>
+          <div class="photo-actions">
+            <button class="demo-button" id="save-listing-measurements" type="button">Save confirmed listing measurements</button>
+            <button class="demo-button" id="clear-listing-measurements" type="button">Clear saved listing measurements</button>
+          </div>
+          <p class="demo-status" id="listing-status" role="status" aria-live="polite">No seller-confirmed listing measurements saved yet.</p>
+        </div>
+        <label class="photo-field" for="photo-fabric">Fabric (seller-confirmed only; optional)
           <select id="photo-fabric">
             <option value="">Not confirmed</option><option value="linen">Linen</option><option value="wool">Wool</option>
             <option value="hemp">Hemp</option><option value="denim">Denim</option><option value="silk">Silk</option>
           </select>
         </label>
-      </div>
+        <p class="demo-status" id="photo-fabric-status" role="status">No fabric is confirmed. The photo cannot reliably identify fabric.</p>
+        <button class="demo-button photo-remove" id="seller-remove-photo" type="button" disabled>Remove seller photo</button>
+      </section>
+      <label class="photo-field" for="scale-edge">A4 edge to mark (only supported photo scale)
+        <select id="scale-edge"><option value="long">Long edge — 29.7 cm</option><option value="short">Short edge — 21 cm</option></select>
+      </label>
+      <p class="photo-privacy"><strong>Private by design:</strong> photos are processed locally in this browser only, not uploaded or saved by Fashion Fit. Buyer references and seller-confirmed listing measurements are stored only in this browser's local storage on this device; they are not synced. Each role has a separate saved profile. Removing a photo clears it from this session, not the original file on your device.</p>
       <div class="photo-preview">
         <canvas id="garment-canvas" width="1" height="1" tabindex="0" role="img" aria-label="Garment photo marking area. Use the arrow keys to position the crosshair and Enter to mark each endpoint." hidden></canvas>
         <div class="photo-placeholder" id="photo-placeholder">Your photo preview appears here locally. Use two marks for each straight reference or garment width.</div>
       </div>
-      <p class="photo-safety" id="photo-safety">Include the entire garment and flat A4 sheet; keep people and identifying details out of the frame. A4 is the only supported photo scale.</p>
-      <p class="photo-step" id="photo-step" role="status" aria-live="polite">Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.</p>
+      <p class="photo-step" id="photo-step" role="status" aria-live="polite">Buyer: choose or take a photo of the target garment. Keep the garment and A4 reference flat, fully visible, and evenly lit.</p>
       <div class="photo-actions">
         <button class="demo-button" id="skip-photo-area" type="button" disabled>Skip this area</button>
         <button class="demo-button" id="restart-photo-marks" type="button" disabled>Restart measurements</button>
-        <button class="demo-button" id="remove-photo" type="button" disabled>Remove photo</button>
       </div>
       <div class="photo-result" id="photo-result" aria-live="polite" hidden></div>
-      <p class="demo-status" id="photo-fabric-status" role="status">No fabric is confirmed. The photo cannot reliably identify fabric.</p>
-      <p>All comparisons are approximate, not a guarantee of fit. Camera angle, wrinkles, style, material, stretch and mark placement affect results. A flat width is doubled to estimate circumference only when the garment is laid flat. Ask the seller for actual measurements when possible. The photo does not identify fabric, infer a person's measurements, or change the separate sizing demo.</p>
+      <button class="demo-button" id="use-photo-estimates" type="button" hidden>Use photo estimates as seller draft values</button>
+      <p>Photo-derived dimensions are approximate; perspective, angle, stretch, style, construction, folds, and mark placement affect estimates. Doubling a flat width estimates circumference only when the garment is laid flat. Buyer comparisons are not fit guarantees and require matching saved dimensions; otherwise the app says it cannot assess. Sellers should confirm actual listing measurements. Fabric is never identified by the photo; sellers may select it manually when confirmed. No camera workflow uses a person's photo or infers body measurements.</p>
     </section>
     <section class="weather" aria-label="Current weather">
       <div class="weather-copy">
@@ -1426,7 +1489,22 @@
         input.addEventListener("change", handleGarmentChange);
       });
       updateShoppingSize(sampleMeasurements);
-      const photoInput = document.getElementById("garment-photo");
+      const photoInputs = {
+        buyer: document.getElementById("buyer-garment-photo"),
+        seller: document.getElementById("seller-garment-photo")
+      };
+      const photoRemoves = {
+        buyer: document.getElementById("buyer-remove-photo"),
+        seller: document.getElementById("seller-remove-photo")
+      };
+      const roleButtons = [...document.querySelectorAll("[data-photo-role]")];
+      const rolePanels = {
+        buyer: document.getElementById("buyer-photo-panel"),
+        seller: document.getElementById("seller-photo-panel")
+      };
+      let activePhotoRole = "buyer";
+      let photoInput = photoInputs[activePhotoRole];
+      let photoRemove = photoRemoves[activePhotoRole];
       const photoCanvas = document.getElementById("garment-canvas");
       const photoContext = photoCanvas.getContext("2d");
       const photoStep = document.getElementById("photo-step");
@@ -1434,18 +1512,22 @@
       const photoPlaceholder = document.getElementById("photo-placeholder");
       const photoRestart = document.getElementById("restart-photo-marks");
       const photoSkip = document.getElementById("skip-photo-area");
-      const photoRemove = document.getElementById("remove-photo");
       const scaleEdge = document.getElementById("scale-edge");
       const a4EdgeLengthsCm = new Map([["long", 29.7], ["short", 21]]);
       const photoFabric = document.getElementById("photo-fabric");
       const photoFabricStatus = document.getElementById("photo-fabric-status");
       const referenceStorageKey = "fashion-fit-known-fit-garment-v1";
+      const listingStorageKey = "fashion-fit-seller-listing-measurements-v1";
       const referenceAreas = ["bust", "waist", "hip"];
       const referenceLabels = { bust: "Bust / chest", waist: "Waist", hip: "Hip" };
       const referenceStatus = document.getElementById("reference-status");
+      const listingStatus = document.getElementById("listing-status");
       let referenceLoadError = false;
       let knownFitMeasurements = loadKnownFitMeasurements();
+      let listingLoadError = false;
+      let listingMeasurements = loadListingMeasurements();
       let referenceInputUnit = document.getElementById("reference-unit").value;
+      let listingInputUnit = document.getElementById("listing-unit").value;
       const photoImage = new Image();
       const photoStages = [
         { key: "scale", label: "scale reference edge" },
@@ -1458,21 +1540,30 @@
       let photoReady = false;
       let photoStageIndex = 0;
       let photoLines = {};
+      let latestPhotoCircumferences = null;
       let activePhotoPoints = [];
       let photoCursor = { x: 0.5, y: 0.5 };
 
-      function loadKnownFitMeasurements() {
+      function loadMeasurements(storageKey, onError) {
         try {
-          const stored = JSON.parse(localStorage.getItem(referenceStorageKey) || "null");
+          const stored = JSON.parse(localStorage.getItem(storageKey) || "null");
           if (!stored || typeof stored !== "object") return {};
           return Object.fromEntries(referenceAreas.flatMap(name => {
             const value = stored[name];
             return Number.isFinite(value) && value >= 20 && value <= 200 ? [[name, value]] : [];
           }));
         } catch {
-          referenceLoadError = true;
+          onError();
           return {};
         }
+      }
+
+      function loadKnownFitMeasurements() {
+        return loadMeasurements(referenceStorageKey, () => { referenceLoadError = true; });
+      }
+
+      function loadListingMeasurements() {
+        return loadMeasurements(listingStorageKey, () => { listingLoadError = true; });
       }
 
       function renderKnownFitReference() {
@@ -1490,6 +1581,32 @@
         updateKnownFitStatus(unit);
       }
 
+      function renderListingMeasurements() {
+        const unit = document.getElementById("listing-unit").value;
+        const minimum = unit === "in" ? "7.9" : "20";
+        const maximum = unit === "in" ? "78.7" : "200";
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`listing-${name}`);
+          input.min = minimum;
+          input.max = maximum;
+          input.value = listingMeasurements[name] == null
+            ? ""
+            : (unit === "in" ? listingMeasurements[name] / 2.54 : listingMeasurements[name]).toFixed(1);
+        }
+        updateListingStatus(unit);
+      }
+
+      function updateListingStatus(unit) {
+        if (listingLoadError) {
+          listingStatus.textContent = "Could not load saved listing measurements from this browser. Enter confirmed values again and save to replace them.";
+          return;
+        }
+        const saved = referenceAreas.filter(name => listingMeasurements[name] != null);
+        listingStatus.textContent = saved.length
+          ? `Seller-confirmed and saved on this device: ${saved.map(name => `${referenceLabels[name].toLowerCase()} ${formatMeasurement(listingMeasurements[name], unit)}`).join(" · ")}.`
+          : "No seller-confirmed listing measurements saved yet.";
+      }
+
       function updateKnownFitStatus(unit) {
         if (referenceLoadError) {
           referenceStatus.textContent = "Could not load the saved reference from this browser. Enter its measurements again and save to replace it.";
@@ -1498,7 +1615,7 @@
         const saved = referenceAreas.filter(name => knownFitMeasurements[name] != null);
         referenceStatus.textContent = saved.length
           ? `Saved on this device: ${saved.map(name => `${referenceLabels[name].toLowerCase()} ${formatMeasurement(knownFitMeasurements[name], unit)}`).join(" · ")}.`
-          : "No known-fit garment measurements saved yet.";
+          : "No buyer reference garment measurements saved yet.";
       }
 
       function saveKnownFitReference() {
@@ -1565,6 +1682,71 @@
           input.max = maximum;
         }
         updateKnownFitStatus(nextUnit);
+        if (photoReady && photoStageIndex >= photoStages.length && activePhotoRole === "buyer") showPhotoEstimate();
+      });
+      document.getElementById("listing-unit").addEventListener("change", event => {
+        const nextUnit = event.target.value;
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`listing-${name}`);
+          if (!input.value.trim()) continue;
+          const currentValue = Number(input.value);
+          const converted = listingInputUnit === nextUnit
+            ? currentValue
+            : nextUnit === "in" ? currentValue / 2.54 : currentValue * 2.54;
+          input.value = converted.toFixed(1);
+        }
+        listingInputUnit = nextUnit;
+        const minimum = nextUnit === "in" ? "7.9" : "20";
+        const maximum = nextUnit === "in" ? "78.7" : "200";
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`listing-${name}`);
+          input.min = minimum;
+          input.max = maximum;
+        }
+        updateListingStatus(nextUnit);
+        if (photoReady && photoStageIndex >= photoStages.length && activePhotoRole === "seller") showPhotoEstimate();
+      });
+      document.getElementById("save-listing-measurements").addEventListener("click", () => {
+        const unit = document.getElementById("listing-unit").value;
+        const values = {};
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`listing-${name}`);
+          if (!input.value.trim()) continue;
+          const value = Number(input.value);
+          const centimetres = unit === "in" ? value * 2.54 : value;
+          if (!Number.isFinite(value) || centimetres < 20 || centimetres > 200) {
+            const range = unit === "in" ? "7.9 to 78.7" : "20 to 200";
+            listingStatus.textContent = `Enter a valid confirmed ${referenceLabels[name].toLowerCase()} circumference from ${range} ${unit}, or leave it blank.`;
+            input.focus();
+            return;
+          }
+          values[name] = centimetres;
+        }
+        if (!Object.keys(values).length) {
+          listingStatus.textContent = "Enter at least one seller-confirmed listing measurement.";
+          return;
+        }
+        try {
+          localStorage.setItem(listingStorageKey, JSON.stringify(values));
+          listingMeasurements = values;
+          listingLoadError = false;
+          renderListingMeasurements();
+          if (photoReady && photoStageIndex >= photoStages.length && activePhotoRole === "seller") showPhotoEstimate();
+          listingStatus.textContent += " These values are your confirmation, not image-detected measurements.";
+        } catch {
+          listingStatus.textContent = "Could not save listing measurements in this browser. Check device storage settings and try again.";
+        }
+      });
+      document.getElementById("clear-listing-measurements").addEventListener("click", () => {
+        try {
+          localStorage.removeItem(listingStorageKey);
+          listingMeasurements = {};
+          listingLoadError = false;
+          renderListingMeasurements();
+          if (photoReady && photoStageIndex >= photoStages.length && activePhotoRole === "seller") showPhotoEstimate();
+        } catch {
+          listingStatus.textContent = "Could not clear the saved listing measurements in this browser.";
+        }
       });
       referenceAreas.forEach(name => {
         document.getElementById(`reference-${name}`).addEventListener("input", () => {
@@ -1572,20 +1754,27 @@
         });
       });
       renderKnownFitReference();
+      renderListingMeasurements();
 
       function photoStageInstruction() {
-        if (!photoReady) return "Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.";
-        if (photoStageIndex >= photoStages.length) return "Photo estimate ready. Review the approximate measurements and comparison below.";
+        const roleLabel = activePhotoRole === "seller" ? "listing garment" : "target garment";
+        if (!photoReady) return `${activePhotoRole === "seller" ? "Seller" : "Buyer"}: choose or take a photo of the ${roleLabel}. Keep the garment and A4 reference flat, fully visible, and evenly lit.`;
+        if (photoStageIndex >= photoStages.length) return activePhotoRole === "seller"
+          ? "Seller photo estimate ready. Review, confirm, and save actual listing measurements below."
+          : "Buyer photo estimate ready. Review the approximate comparison below.";
         const stage = photoStages[photoStageIndex];
         if (activePhotoPoints.length) return `Mark the second endpoint of the ${stage.label}.`;
         if (stage.key === "scale") return `Mark both ends of the selected ${scaleEdge.options[scaleEdge.selectedIndex].text} in the photo.`;
-        return `Mark both ends of the ${stage.label}, or skip if that area does not apply to this garment.`;
+        return `Mark both ends of the ${stage.label} on the ${roleLabel}, or skip if that area does not apply.`;
       }
 
       function updatePhotoActions() {
         photoRestart.disabled = !photoReady;
         photoSkip.disabled = !photoReady || photoStageIndex === 0 ||
           photoStageIndex >= photoStages.length || activePhotoPoints.length > 0;
+        for (const [role, button] of Object.entries(photoRemoves)) {
+          button.disabled = role !== activePhotoRole || !photoReady;
+        }
       }
 
       function drawPhotoCanvas() {
@@ -1659,8 +1848,9 @@
         photoCanvas.height = 1;
         photoCanvas.hidden = true;
         photoPlaceholder.hidden = false;
-        photoRemove.disabled = true;
+        for (const button of Object.values(photoRemoves)) button.disabled = true;
         photoFabric.value = "";
+        document.getElementById("use-photo-estimates").hidden = true;
         updatePhotoFabricChoice();
         resetPhotoMarks();
         photoCursor = { x: 0.5, y: 0.5 };
@@ -1669,9 +1859,11 @@
       function resetPhotoMarks(message = "") {
         photoStageIndex = 0;
         photoLines = {};
+        latestPhotoCircumferences = null;
         activePhotoPoints = [];
         photoResult.hidden = true;
         photoResult.replaceChildren();
+        document.getElementById("use-photo-estimates").hidden = true;
         photoStep.textContent = message || photoStageInstruction();
         updatePhotoActions();
         drawPhotoCanvas();
@@ -1691,15 +1883,16 @@
         for (const card of cards) {
           card.classList.toggle("photo-fabric-selected", card.dataset.fabric === photoFabric.value && photoFabric.value !== "");
         }
+        if (activePhotoRole !== "seller") return;
         if (!photoFabric.value) {
           photoFabricStatus.textContent = "No fabric is confirmed. The photo cannot reliably identify fabric.";
         } else {
           const fabricName = photoFabric.options[photoFabric.selectedIndex].text;
-          photoFabricStatus.textContent = `${fabricName} selected by you. This is not detected from the image; check the care label or ask the seller.`;
+          photoFabricStatus.textContent = `${fabricName} confirmed by you as the seller. This is not detected from the image; check the care label or fabric knowledge.`;
         }
         const summary = photoResult.querySelector(".photo-fabric-summary");
         if (summary) summary.textContent = photoFabric.value
-          ? `Fabric selected by you: ${photoFabric.options[photoFabric.selectedIndex].text}. This is not detected from the image.`
+          ? `Seller-confirmed fabric: ${photoFabric.options[photoFabric.selectedIndex].text}. This is not detected from the image.`
           : "Fabric not confirmed; the photo cannot identify it.";
       }
 
@@ -1722,8 +1915,28 @@
           return;
         }
 
-        const unit = document.getElementById("reference-unit").value;
+        latestPhotoCircumferences = circumferences;
+        const unit = document.getElementById(activePhotoRole === "seller" ? "listing-unit" : "reference-unit").value;
         const displayValue = value => formatMeasurement(value, unit);
+        if (activePhotoRole === "seller") {
+          const measuredAreas = referenceAreas.filter(name => Number.isFinite(circumferences[name]));
+          photoResult.innerHTML = `
+            <strong>Seller photo-derived estimates · ${measuredAreas.length ? "approximate only" : "no garment widths marked"}</strong>
+            <p>These photo-derived values are drafts, not confirmed listing measurements. Check them against the garment label or a tape before saving.</p>
+            <table><thead><tr><th>Area</th><th>Listing garment circumference (approx.)</th><th>Previously saved seller value</th></tr></thead>
+              <tbody>${referenceAreas.map(name =>
+                `<tr><td>${referenceLabels[name]}</td><td>${circumferences[name] == null ? "Not measured" : displayValue(circumferences[name])}</td><td>${listingMeasurements[name] == null ? "Not saved" : displayValue(listingMeasurements[name])}</td></tr>`
+              ).join("")}</tbody></table>
+            <p class="photo-fabric-summary"></p>
+            <p>This is not a fit assessment or guarantee. Perspective, camera angle, folds, construction, style, material, stretch and mark placement affect estimates. A flat width is doubled only when the garment lies flat.</p>`;
+          photoResult.hidden = false;
+          document.getElementById("use-photo-estimates").hidden = !measuredAreas.length;
+          updatePhotoFabricChoice();
+          photoStep.textContent = "Seller photo estimates are drafts only. Confirm actual listing measurements from a label or tape before saving.";
+          updatePhotoActions();
+          return;
+        }
+
         const comparedAreas = referenceAreas.filter(name =>
           knownFitMeasurements[name] != null && Number.isFinite(circumferences[name])
         );
@@ -1751,17 +1964,19 @@
           ? `Compared ${comparedAreas.map(name => referenceLabels[name].toLowerCase()).join(", ")}${missingReferenceAreas.length ? ` only; no saved reference for ${missingReferenceAreas.map(name => referenceLabels[name].toLowerCase()).join(", ")}` : ""}${missingTargetAreas.length ? `; target not measured at ${missingTargetAreas.map(name => referenceLabels[name].toLowerCase()).join(", ")}` : ""}.`
           : "No matching reference dimensions were available, so fit cannot be assessed.";
         photoResult.innerHTML = `
-          <strong>Approximate comparison: ${assessment}</strong>
+          <strong>Buyer comparison: ${assessment}</strong>
           <p>${scopeNote}</p>
-          <table><thead><tr><th>Area</th><th>Target garment (approx.)</th><th>Your known-fit garment</th><th>Difference</th></tr></thead>
+          <table><thead><tr><th>Area</th><th>Shopping target (approx.)</th><th>Your saved known-fit garment</th><th>Difference</th></tr></thead>
             <tbody>${["bust", "waist", "hip"].map(name =>
               `<tr><td>${referenceLabels[name]}</td><td>${circumferences[name] == null ? "Not measured" : displayValue(circumferences[name])}</td><td>${knownFitMeasurements[name] == null ? "Not saved" : displayValue(knownFitMeasurements[name])}</td><td>${differences[name] == null ? "Not compared" : `${differences[name] > 0 ? "+" : ""}${displayValue(differences[name])}`}</td></tr>`
             ).join("")}</tbody></table>
-          <p class="photo-fabric-summary"></p>
-          <p>A flat width is doubled to estimate circumference. Differences within 3 cm are labelled similar; this is only a comparison tolerance, not an ease rule. This is not a guarantee: style, material, stretch, camera angle, folds and mark placement matter. Compare actual listing measurements and consider your fit preference.</p>`;
+          <p>A flat width is doubled to estimate circumference. Differences within 3 cm are labelled similar; this is only a comparison tolerance, not an ease rule. This is not a fit guarantee: perspective, camera angle, folds, construction, style, material, stretch and mark placement affect results. Compare actual listing measurements and consider your fit preference.</p>`;
         photoResult.hidden = false;
+        document.getElementById("use-photo-estimates").hidden = true;
         updatePhotoFabricChoice();
-        photoStep.textContent = "Photo comparison ready. Only matching saved garment measurements were compared; the separate sample sizing demo is unchanged.";
+        photoStep.textContent = comparedAreas.length
+          ? "Buyer comparison ready. Only matching saved garment measurements were compared; the separate sample sizing demo is unchanged."
+          : "Cannot assess fit yet: save a buyer reference and mark the same garment area to enable comparison.";
         photoRestart.disabled = false;
         updatePhotoActions();
       }
@@ -1790,57 +2005,95 @@
         drawPhotoCanvas();
       }
 
-      photoInput.addEventListener("change", () => {
-        const file = photoInput.files[0];
-        if (!file) return;
-        clearPhoto(false);
-        if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
-          photoStep.textContent = "Choose an image file smaller than 20 MB.";
-          photoInput.value = "";
-          return;
+      function setPhotoRole(role) {
+        if (role === activePhotoRole) return;
+        clearPhoto();
+        activePhotoRole = role;
+        photoInput = photoInputs[role];
+        photoRemove = photoRemoves[role];
+        for (const button of roleButtons) {
+          const selected = button.dataset.photoRole === role;
+          button.setAttribute("aria-pressed", String(selected));
         }
-        const loadId = ++photoLoadId;
-        photoObjectUrl = URL.createObjectURL(file);
-        photoRemove.disabled = false;
-        photoImage.onload = () => {
-          if (loadId !== photoLoadId) return;
-          if (photoImage.naturalWidth * photoImage.naturalHeight > 40_000_000) {
+        for (const [panelRole, panel] of Object.entries(rolePanels)) {
+          panel.hidden = panelRole !== role;
+        }
+        photoStep.textContent = photoStageInstruction();
+        updatePhotoActions();
+        updatePhotoFabricChoice();
+      }
+
+      roleButtons.forEach(button => button.addEventListener("click", () => setPhotoRole(button.dataset.photoRole)));
+      for (const [role, input] of Object.entries(photoInputs)) {
+        input.addEventListener("change", () => {
+          if (activePhotoRole !== role) setPhotoRole(role);
+          const file = input.files[0];
+          if (!file) return;
+          clearPhoto(false);
+          if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
+            photoStep.textContent = "Choose an image file smaller than 20 MB.";
+            input.value = "";
+            return;
+          }
+          const loadId = ++photoLoadId;
+          photoObjectUrl = URL.createObjectURL(file);
+          photoRemove.disabled = false;
+          photoImage.onload = () => {
+            if (loadId !== photoLoadId) return;
+            if (photoImage.naturalWidth * photoImage.naturalHeight > 40_000_000) {
+              photoReady = false;
+              photoCanvas.hidden = true;
+              photoPlaceholder.hidden = false;
+              photoRestart.disabled = true;
+              input.value = "";
+              photoRemove.disabled = true;
+              photoStep.textContent = "This image is too large to process here. Choose a photo under 40 megapixels.";
+              URL.revokeObjectURL(photoObjectUrl);
+              photoObjectUrl = "";
+              return;
+            }
+            const scale = Math.min(1, 1800 / photoImage.naturalWidth, 1800 / photoImage.naturalHeight);
+            photoCanvas.width = Math.max(1, Math.round(photoImage.naturalWidth * scale));
+            photoCanvas.height = Math.max(1, Math.round(photoImage.naturalHeight * scale));
+            photoReady = true;
+            photoCanvas.hidden = false;
+            photoPlaceholder.hidden = true;
+            photoRestart.disabled = false;
+            photoRemove.disabled = false;
+            photoCursor = { x: 0.5, y: 0.5 };
+            resetPhotoMarks();
+            drawPhotoCanvas();
+          };
+          photoImage.onerror = () => {
+            if (loadId !== photoLoadId) return;
             photoReady = false;
             photoCanvas.hidden = true;
             photoPlaceholder.hidden = false;
             photoRestart.disabled = true;
-            photoInput.value = "";
+            input.value = "";
             photoRemove.disabled = true;
-            photoStep.textContent = "This image is too large to process here. Choose a photo under 40 megapixels.";
+            photoStep.textContent = "That image could not be opened. Try another image file.";
             URL.revokeObjectURL(photoObjectUrl);
             photoObjectUrl = "";
-            return;
-          }
-          const scale = Math.min(1, 1800 / photoImage.naturalWidth, 1800 / photoImage.naturalHeight);
-          photoCanvas.width = Math.max(1, Math.round(photoImage.naturalWidth * scale));
-          photoCanvas.height = Math.max(1, Math.round(photoImage.naturalHeight * scale));
-          photoReady = true;
-          photoCanvas.hidden = false;
-          photoPlaceholder.hidden = true;
-          photoRestart.disabled = false;
-          photoRemove.disabled = false;
-          photoCursor = { x: 0.5, y: 0.5 };
-          resetPhotoMarks();
-          drawPhotoCanvas();
-        };
-        photoImage.onerror = () => {
-          if (loadId !== photoLoadId) return;
-          photoReady = false;
-          photoCanvas.hidden = true;
-          photoPlaceholder.hidden = false;
-          photoRestart.disabled = true;
-          photoInput.value = "";
-          photoRemove.disabled = true;
-          photoStep.textContent = "That image could not be opened. Try another image file.";
-          URL.revokeObjectURL(photoObjectUrl);
-          photoObjectUrl = "";
-        };
-        photoImage.src = photoObjectUrl;
+          };
+          photoImage.src = photoObjectUrl;
+        });
+      }
+
+      document.getElementById("use-photo-estimates").addEventListener("click", () => {
+        if (activePhotoRole !== "seller" || !latestPhotoCircumferences) return;
+        const unit = document.getElementById("listing-unit").value;
+        for (const name of referenceAreas) {
+          const value = latestPhotoCircumferences[name];
+          if (value == null) continue;
+          document.getElementById(`listing-${name}`).value = (unit === "in" ? value / 2.54 : value).toFixed(1);
+        }
+        listingStatus.textContent = "Approximate photo estimates copied as draft values. Check each against the garment label or a tape, then save only the measurements you confirm.";
+      });
+      referenceAreas.forEach(name => {
+        document.getElementById(`listing-${name}`).addEventListener("input", () => {
+          listingStatus.textContent = "Listing edits are not saved yet. Confirm actual measurements, then save.";
+        });
       });
 
       photoCanvas.addEventListener("pointerdown", event => {
@@ -1867,7 +2120,12 @@
       });
       photoRestart.addEventListener("click", () => resetPhotoMarks());
       photoSkip.addEventListener("click", skipPhotoArea);
-      photoRemove.addEventListener("click", () => clearPhoto());
+      for (const [role, button] of Object.entries(photoRemoves)) {
+        button.addEventListener("click", () => {
+          if (activePhotoRole !== role) setPhotoRole(role);
+          clearPhoto();
+        });
+      }
       scaleEdge.addEventListener("change", () => resetPhotoMarks());
       photoFabric.addEventListener("change", updatePhotoFabricChoice);
       updatePhotoFabricChoice();

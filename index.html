@@ -147,22 +147,73 @@
       font-size: 13px;
     }
 
-    .innovation-steps {
+    .demo-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 9px;
-      margin-top: 15px;
+      gap: 10px;
+      margin-top: 17px;
     }
 
-    .innovation-step {
-      padding: 10px 11px;
-      border: 1px solid rgb(90 111 83 / 12%);
-      border-radius: 11px;
+    .demo-step {
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid rgb(90 111 83 / 15%);
+      border-radius: 12px;
       background: rgb(255 255 255 / 58%);
     }
 
-    .innovation-step strong { display: block; font-size: 12px; font-weight: 700; }
-    .innovation-step span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .demo-step h3 { margin: 0; font-size: 13px; font-weight: 730; }
+    .demo-step > p { margin: 4px 0 11px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .measurement-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .measurement-fields label, .demo-select-label { display: block; color: var(--muted); font-size: 10px; font-weight: 650; }
+    .measurement-input, .demo-select {
+      width: 100%;
+      height: 34px;
+      margin-top: 4px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      outline: none;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .measurement-input:focus, .demo-select:focus { border-color: #9eae9d; box-shadow: 0 0 0 2px rgb(66 91 71 / 10%); }
+    .demo-selectors { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 9px; }
+    .demo-selectors.single { grid-template-columns: 1fr; }
+    .demo-button {
+      min-height: 33px;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border: 1px solid #cfd9ca;
+      border-radius: 9px;
+      background: #e8eee5;
+      color: #354c3a;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .demo-button:hover { background: #dde7d9; }
+    .demo-status { min-height: 30px; margin: 8px 0 0 !important; color: #557056 !important; font-size: 10px !important; }
+    .fit-result { margin: 10px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.2; }
+    .fit-detail, .size-equivalents { margin: 5px 0 0 !important; color: var(--muted); font-size: 10px !important; line-height: 1.5 !important; }
+    .fit-note {
+      display: block;
+      width: 100%;
+      min-height: 71px;
+      margin-top: 8px;
+      padding: 8px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      font: inherit;
+      font-size: 10px;
+      line-height: 1.45;
+    }
     .weather {
       display: flex;
       align-items: center;
@@ -455,11 +506,19 @@
     }
 
     @media (max-width: 520px) {
-      .innovation-steps { grid-template-columns: 1fr; }
+
       .shell { width: min(100% - 26px, 440px); padding-top: 20px; }
       .topbar { padding-bottom: 20px; }
       .intro { padding-top: 27px; }
       .weather { margin: 19px 0 23px; }
+      .demo-grid { grid-template-columns: 1fr; }
+      .demo-step { padding: 15px; }
+      .measurement-fields label, .demo-select-label { font-size: 11px; }
+      .measurement-input, .demo-select { height: 38px; font-size: 14px; }
+      .demo-button { min-height: 38px; font-size: 12px; }
+      .demo-status { min-height: auto; font-size: 11px !important; }
+      .fit-detail, .size-equivalents { font-size: 12px !important; }
+      .fit-note { min-height: 84px; font-size: 12px; }
       .controls { align-items: flex-start; flex-direction: column; gap: 11px; }
       .search-wrap { width: 100%; }
       .featured { grid-template-columns: 1fr; }
@@ -500,7 +559,10 @@
       body { background: radial-gradient(ellipse at 50% -18%, rgb(68 79 61 / 22%), transparent 36rem), var(--paper); }
       .mark { color: #20271f; }
       .innovation { border-color: #40473d; background: linear-gradient(115deg, #283128, #302f27); }
-      .innovation-step { border-color: rgb(190 210 180 / 12%); background: rgb(255 255 255 / 4%); }
+      .demo-step { border-color: rgb(190 210 180 / 12%); background: rgb(255 255 255 / 4%); }
+      .demo-button { border-color: #495b46; background: #303a30; color: #d6e3d0; }
+      .demo-button:hover { background: #3a4639; }
+      .demo-status { color: #b4c8ac !important; }
       .weather { border-color: #40473d; background: linear-gradient(105deg, #2b332a, #302f27); }
       .weather-icon { background: rgb(255 255 255 / 8%); }
       .weather-detail, .weather-source, .weather-time { color: #b4b7a9; }
@@ -537,11 +599,59 @@
     <section class="innovation" aria-labelledby="innovation-title">
       <p class="innovation-label">AI sizing innovation · Project concept</p>
       <h2 class="innovation-title" id="innovation-title">A better fit for second-hand, everywhere.</h2>
-      <p class="innovation-copy">Fashion Fit is designed to sample a garment's real measurements, then use AI to compare them with a shopper's fit preferences and make confusing country-to-country size labels easier to understand. Better-informed choices can help buyers avoid the cost and hassle of a poor fit, while helping sellers spend less time and money on returns, exchanges and relisting. This demo introduces the idea with sample pieces; live AI measurement matching is not connected yet.</p>
-      <div class="innovation-steps" aria-label="How the concept works">
-        <div class="innovation-step"><strong>1. Sample the garment</strong><span>Record the item's actual measurements once.</span></div>
-        <div class="innovation-step"><strong>2. Match across sizes</strong><span>Compare garment measurements and translate regional size labels.</span></div>
-        <div class="innovation-step"><strong>3. Keep it in circulation</strong><span>Make more confident vintage choices and reduce avoidable returns and reposting.</span></div>
+      <p class="innovation-copy">Try the three steps below with a sample vintage dress or your own measurements. Record the garment once, compare its actual dimensions with a shopper's, then save a fit note a seller can add to the listing. This demo runs locally with transparent sizing rules and approximate regional labels; it does not connect to a trained AI model.</p>
+      <div class="demo-grid" aria-label="Interactive garment sizing demo">
+        <section class="demo-step" aria-labelledby="sample-title">
+          <h3 id="sample-title">1. Sample the garment</h3>
+          <p>Measure the garment around its fullest points. Edit the sample values to try it.</p>
+          <div class="measurement-fields">
+            <label for="garment-bust">Bust<input class="measurement-input garment-measurement" id="garment-bust" type="number" min="20" max="200" step="0.5" value="96" inputmode="decimal"></label>
+            <label for="garment-waist">Waist<input class="measurement-input garment-measurement" id="garment-waist" type="number" min="20" max="200" step="0.5" value="82" inputmode="decimal"></label>
+            <label for="garment-hip">Hip<input class="measurement-input garment-measurement" id="garment-hip" type="number" min="20" max="200" step="0.5" value="104" inputmode="decimal"></label>
+          </div>
+          <div class="demo-selectors single">
+            <label class="demo-select-label" for="garment-unit">Measurement unit
+              <select class="demo-select" id="garment-unit"><option value="cm">Centimetres (cm)</option><option value="in">Inches (in)</option></select>
+            </label>
+          </div>
+          <button class="demo-button" id="record-sample" type="button">Record garment sample</button>
+          <p class="demo-status" id="sample-status" data-current="true" role="status">Sample dress is ready to compare. Edit measurements and record to update it.</p>
+        </section>
+
+        <section class="demo-step" aria-labelledby="shopper-title">
+          <h3 id="shopper-title">2. Match the shopper</h3>
+          <p>Enter body measurements and the label system you usually shop by.</p>
+          <div class="measurement-fields">
+            <label for="body-bust">Bust<input class="measurement-input body-measurement" id="body-bust" type="number" min="20" max="200" step="0.5" value="88" inputmode="decimal"></label>
+            <label for="body-waist">Waist<input class="measurement-input body-measurement" id="body-waist" type="number" min="20" max="200" step="0.5" value="72" inputmode="decimal"></label>
+            <label for="body-hip">Hip<input class="measurement-input body-measurement" id="body-hip" type="number" min="20" max="200" step="0.5" value="96" inputmode="decimal"></label>
+          </div>
+          <div class="demo-selectors">
+            <label class="demo-select-label" for="body-unit">Unit
+              <select class="demo-select" id="body-unit"><option value="cm">cm</option><option value="in">in</option></select>
+            </label>
+            <label class="demo-select-label" for="usual-size">Usual size
+              <select class="demo-select" id="usual-size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option></select>
+            </label>
+          </div>
+          <label class="demo-select-label" for="size-region">Your usual label region
+            <select class="demo-select" id="size-region"><option value="US">United States (US)</option><option value="UK">United Kingdom (UK)</option><option value="EU">Europe (EU)</option><option value="AU" selected>Australia (AU)</option></select>
+          </label>
+          <p class="demo-status" id="shopper-status" aria-live="polite">Adjust the values to see an instant fit estimate.</p>
+        </section>
+
+        <section class="demo-step" aria-labelledby="circulation-title">
+          <h3 id="circulation-title">3. Keep it in circulation</h3>
+          <p>Give the next buyer a useful fit note to reduce guesswork and avoidable returns.</p>
+          <p class="fit-result" id="fit-result" aria-live="polite">Ready to compare</p>
+          <p class="fit-detail" id="fit-detail">Record a garment sample and enter shopper measurements.</p>
+          <p class="size-equivalents" id="size-equivalents">Approximate label equivalents will appear here.</p>
+          <label class="demo-select-label" for="fit-note">Seller listing fit note
+            <textarea class="fit-note" id="fit-note" readonly>Record a sample and enter shopper measurements to create a fit note.</textarea>
+          </label>
+          <button class="demo-button" id="download-fit-note" type="button">Download fit note</button>
+          <p class="demo-status" id="circulation-status" role="status">The note can be added to a second-hand listing.</p>
+        </section>
       </div>
     </section>
     <section class="weather" aria-label="Current weather">
@@ -744,6 +854,158 @@
           button.querySelector("span").textContent = saved ? "Saved" : "Save";
         });
       });
+
+      const measurementNames = ["bust", "waist", "hip"];
+      const regionSizes = {
+        XS: { US: "0–2", UK: "4–6", EU: "32–34", AU: "4–6" },
+        S: { US: "4–6", UK: "8–10", EU: "36–38", AU: "8–10" },
+        M: { US: "8–10", UK: "12–14", EU: "40–42", AU: "12–14" },
+        L: { US: "12–14", UK: "16–18", EU: "44–46", AU: "16–18" },
+        XL: { US: "16–18", UK: "20–22", EU: "48–50", AU: "20–22" }
+      };
+      const minimumEase = { bust: 6, waist: 4, hip: 6 };
+      const maximumEase = { bust: 18, waist: 14, hip: 20 };
+      let sampleMeasurements = { bust: 96, waist: 82, hip: 104 };
+
+      function readMeasurements(prefix, unit) {
+        const values = {};
+        for (const name of measurementNames) {
+          const input = document.getElementById(`${prefix}-${name}`);
+          const value = Number(input.value);
+          if (!input.value.trim() || !Number.isFinite(value) || value < 20 || value > 200) {
+            return null;
+          }
+          values[name] = unit === "in" ? value * 2.54 : value;
+        }
+        return values;
+      }
+
+      function formatMeasurement(value, unit) {
+        const converted = unit === "in" ? value / 2.54 : value;
+        return `${converted.toFixed(1)} ${unit}`;
+      }
+
+      function getFitEstimate(sample, body) {
+        const ease = Object.fromEntries(measurementNames.map(name => [name, sample[name] - body[name]]));
+        const tooSmall = measurementNames.filter(name => ease[name] < 0);
+        const snug = measurementNames.filter(name => ease[name] >= 0 && ease[name] < minimumEase[name]);
+        const roomy = measurementNames.filter(name => ease[name] > maximumEase[name]);
+
+        if (tooSmall.length) {
+          return { title: "Likely too small", detail: `The sample is smaller than the shopper's ${tooSmall.join(", ")} measurements. Consider a larger garment.` };
+        }
+        if (snug.length) {
+          return { title: "Close fit — check preference", detail: `Limited ease at the ${snug.join(", ")}. Check the garment's stretch and how the shopper likes it to fit.` };
+        }
+        if (roomy.length) {
+          return { title: "Likely relaxed fit", detail: `Extra room at the ${roomy.join(", ")}. Check whether a looser fit is preferred.` };
+        }
+        return { title: "Likely comfortable fit", detail: "The sample has a moderate amount of ease at the bust, waist and hip." };
+      }
+
+      function updateFitDemo() {
+        const bodyUnit = document.getElementById("body-unit").value;
+        const body = readMeasurements("body", bodyUnit);
+        const result = document.getElementById("fit-result");
+        const detail = document.getElementById("fit-detail");
+        const note = document.getElementById("fit-note");
+        const equivalents = document.getElementById("size-equivalents");
+        const shopperStatus = document.getElementById("shopper-status");
+
+        if (!body) {
+          result.textContent = "Check the measurements";
+          detail.textContent = "Enter positive bust, waist and hip values to calculate the fit estimate.";
+          equivalents.textContent = "Choose a usual size to see approximate regional labels.";
+          note.value = "Complete all shopper measurements to create a fit note.";
+          shopperStatus.textContent = "Enter a positive number for bust, waist and hip.";
+          return;
+        }
+
+        const size = document.getElementById("usual-size").value;
+        const region = document.getElementById("size-region").value;
+        const labels = regionSizes[size];
+        const regionalSizes = `US ${labels.US} · UK ${labels.UK} · EU ${labels.EU} · AU ${labels.AU}`;
+        equivalents.textContent = `Approximate equivalents for ${region} ${labels[region]} (${size}): ${regionalSizes}. Brand sizing varies.`;
+        shopperStatus.textContent = `Reading body measurements in ${bodyUnit}; comparing the garment in centimetres.`;
+
+        const sampleStatus = document.getElementById("sample-status");
+        const sampleIsCurrent = sampleStatus.dataset.current === "true";
+        if (!sampleIsCurrent) {
+          result.textContent = "Record the garment sample";
+          detail.textContent = "Save the edited garment measurements before comparing sizes.";
+          note.value = "Record the garment sample to create a fit note.";
+          return;
+        }
+
+        const estimate = getFitEstimate(sampleMeasurements, body);
+        result.textContent = estimate.title;
+        detail.textContent = estimate.detail;
+        const garmentUnit = document.getElementById("garment-unit").value;
+        const garmentSummary = measurementNames.map(name =>
+          `${name}: ${formatMeasurement(sampleMeasurements[name], garmentUnit)}`
+        ).join(" · ");
+        const shopperSummary = measurementNames.map(name =>
+          `${name}: ${formatMeasurement(body[name], bodyUnit)}`
+        ).join(" · ");
+        note.value = [
+          `Fashion Fit vintage fit note — The Everyday Button Dress`,
+          `Garment sample: ${garmentSummary}`,
+          `Shopper measurements: ${shopperSummary}`,
+          `Starting size label: ${region} ${labels[region]} (${size})`,
+          `Approximate regional labels: ${regionalSizes}`,
+          `Fit estimate: ${estimate.title}. ${estimate.detail}`,
+          "Demo estimate only: compare the item's actual measurements; vintage fit and brand sizing vary."
+        ].join("\n");
+      }
+
+      document.getElementById("record-sample").addEventListener("click", () => {
+        const measurements = readMeasurements("garment", document.getElementById("garment-unit").value);
+        const status = document.getElementById("sample-status");
+        if (!measurements) {
+          status.dataset.current = "false";
+          status.textContent = "Enter positive bust, waist and hip measurements to record this garment.";
+          updateFitDemo();
+          return;
+        }
+        sampleMeasurements = measurements;
+        status.dataset.current = "true";
+        status.textContent = "Garment sample recorded for this demo.";
+        updateFitDemo();
+      });
+
+      document.querySelectorAll(".body-measurement, #body-unit, #usual-size, #size-region").forEach(input => {
+        input.addEventListener("input", updateFitDemo);
+        input.addEventListener("change", updateFitDemo);
+      });
+      document.querySelectorAll(".garment-measurement, #garment-unit").forEach(input => {
+        input.addEventListener("input", () => {
+          document.getElementById("sample-status").dataset.current = "false";
+          document.getElementById("sample-status").textContent = "Measurements changed. Record the sample to update the fit.";
+          updateFitDemo();
+        });
+        input.addEventListener("change", () => {
+          document.getElementById("sample-status").dataset.current = "false";
+          document.getElementById("sample-status").textContent = "Measurements changed. Record the sample to update the fit.";
+          updateFitDemo();
+        });
+      });
+      document.getElementById("download-fit-note").addEventListener("click", () => {
+        const note = document.getElementById("fit-note").value;
+        const status = document.getElementById("circulation-status");
+        if (!note.startsWith("Fashion Fit vintage fit note")) {
+          status.textContent = "Record a valid garment sample and shopper measurements first.";
+          return;
+        }
+        const file = new Blob([note], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "fashion-fit-vintage-fit-note.txt";
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+        status.textContent = "Fit note downloaded. Add it to the second-hand listing so the next buyer can check the fit.";
+      });
+      updateFitDemo();
 
       const weatherCodes = {
         0: ["Clear skies", "sun"], 1: ["Mostly clear", "sun"], 2: ["Partly cloudy", "cloud"],

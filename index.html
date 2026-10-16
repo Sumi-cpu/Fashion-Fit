@@ -273,6 +273,22 @@
       box-shadow: var(--shadow);
     }
     .photo-tool > p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .reference-profile {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgb(128 128 128 / 4%);
+    }
+    .reference-profile h3 { margin: 0; font-size: 13px; }
+    .reference-profile > p:not(.demo-status) { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .reference-fields {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 10px;
+    }
+    .photo-safety { font-size: 12px !important; }
     .photo-privacy {
       padding: 10px 12px;
       border-radius: 10px;
@@ -644,6 +660,7 @@
       .fit-note { min-height: 84px; font-size: 12px; }
       .photo-tool { padding: 15px; }
       .photo-controls { grid-template-columns: 1fr; }
+      .reference-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .photo-preview { min-height: 130px; }
       .photo-placeholder { padding: 14px; }
       .controls { align-items: flex-start; flex-direction: column; gap: 11px; }
@@ -734,24 +751,24 @@
 
     <section class="intro" aria-labelledby="page-title">
       <h1 id="page-title">Find your feel.</h1>
-      <p class="intro-copy">One great vintage shape, five different fabrics. Pick your size and find the one that feels like you.</p>
+      <p class="intro-copy">Compare a second-hand find with a garment you already know fits. Your measurements stay yours; no single size chart fits everyone.</p>
     </section>
 
     <section class="qr-promo" aria-labelledby="qr-title">
-      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=vintage-music-20261016" target="_blank" rel="noopener noreferrer">
+      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-fit-20261016" target="_blank" rel="noopener noreferrer">
         <img src="assets/fashion-fit-qr.png" alt="QR code to open the Fashion Fit live sizing demo">
       </a>
       <div class="qr-copy">
         <p class="innovation-label">Share the live demo</p>
         <h2 class="qr-title" id="qr-title">Scan to open Fashion Fit</h2>
-        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=vintage-music-20261016" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
+        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=buyer-fit-20261016" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
       </div>
     </section>
 
     <section class="innovation" aria-labelledby="innovation-title">
       <p class="innovation-label">AI sizing innovation · Project concept</p>
       <h2 class="innovation-title" id="innovation-title">A better fit for second-hand, everywhere.</h2>
-      <p class="innovation-copy">Try the three steps below with a sample vintage dress or your own measurements. Record the garment once, compare its actual dimensions with a shopper's, then save a fit note a seller can add to the listing. This demo runs locally with transparent sizing rules and approximate regional labels; it does not connect to a trained AI model.</p>
+      <p class="innovation-copy">Explore the sample garment and optional body-measurement demo below. For buyer-side shopping, use the photo tool to compare a second-hand item with a garment you know fits. This runs locally with illustrative sizing rules; it is not a trained AI model or a universal size chart.</p>
       <div class="demo-grid" aria-label="Interactive garment sizing demo">
         <section class="demo-step" aria-labelledby="sample-title">
           <h3 id="sample-title">1. Sample the garment</h3>
@@ -809,12 +826,35 @@
       </div>
     </section>
     <section class="photo-tool" aria-labelledby="photo-title">
-      <h2 id="photo-title">Compare a garment without entering body sizes</h2>
-      <p>Choose a clear, straight-overhead photo of a garment laid flat, with an A4 sheet in the same plane. Use its long edge (29.7 cm) or short edge (21 cm) as the scale reference, then mark across the garment at the bust, waist and hip. The app estimates garment dimensions; it does not identify your body size or predict fit. You can skip the shopper-measurement panel for this comparison; its starting values are examples, and the photo path does not use them.</p>
-      <p class="photo-privacy"><strong>Private by design:</strong> your selected photo is read and measured in this browser only. It is not uploaded or saved by Fashion Fit. Select <strong>Remove photo</strong> to clear it from this browser session; the original file on your device is not deleted.</p>
+      <h2 id="photo-title">Check a second-hand find while shopping</h2>
+      <p>Use a garment you own and know fits as your personal reference, then photograph the item you are considering. Lay the target garment flat with an A4 sheet in the same plane. This is a garment-only tool: do not photograph or enter measurements for a person, child, or baby. It compares only dimensions you have saved and does not use the sample body measurements above.</p>
+      <div class="reference-profile" aria-labelledby="reference-title">
+        <h3 id="reference-title">Your known-fit garment</h3>
+        <p>Enter its actual circumference measurements from a label or your own tape measurement. You can save one or more areas; only matching saved areas can be compared.</p>
+        <div class="reference-fields">
+          <label class="photo-field" for="reference-bust">Bust / chest circumference
+            <input id="reference-bust" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+          </label>
+          <label class="photo-field" for="reference-waist">Waist circumference
+            <input id="reference-waist" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+          </label>
+          <label class="photo-field" for="reference-hip">Hip circumference
+            <input id="reference-hip" type="number" min="20" max="200" step="0.1" inputmode="decimal" placeholder="Optional">
+          </label>
+          <label class="photo-field" for="reference-unit">Unit
+            <select id="reference-unit"><option value="cm">Centimetres (cm)</option><option value="in">Inches (in)</option></select>
+          </label>
+        </div>
+        <div class="photo-actions">
+          <button class="demo-button" id="save-reference" type="button">Save reference on this device</button>
+          <button class="demo-button" id="clear-reference" type="button">Clear saved reference</button>
+        </div>
+        <p class="demo-status" id="reference-status" role="status" aria-live="polite">No known-fit garment measurements saved yet.</p>
+      </div>
+      <p class="photo-privacy"><strong>Private by design:</strong> the photo is processed locally in this browser only and is not uploaded or saved by Fashion Fit. Your reference measurements are saved only in this browser's local storage on this device; they are not synced across devices. Select <strong>Remove photo</strong> to clear the photo from this session, or <strong>Clear saved reference</strong> to erase the saved measurements. Removing a photo does not delete its original file from your device.</p>
       <div class="photo-controls">
-        <label class="photo-field" for="garment-photo">Choose or take a garment photo
-          <input id="garment-photo" type="file" accept="image/*" capture="environment">
+        <label class="photo-field" for="garment-photo">Take or choose a photo of the target garment only
+          <input id="garment-photo" type="file" accept="image/*" capture="environment" aria-describedby="photo-safety">
         </label>
         <label class="photo-field" for="scale-edge">A4 edge to mark
           <select id="scale-edge"><option value="long">Long edge — 29.7 cm</option><option value="short">Short edge — 21 cm</option></select>
@@ -828,16 +868,18 @@
       </div>
       <div class="photo-preview">
         <canvas id="garment-canvas" width="1" height="1" tabindex="0" role="img" aria-label="Garment photo marking area. Use the arrow keys to position the crosshair and Enter to mark each endpoint." hidden></canvas>
-        <div class="photo-placeholder" id="photo-placeholder">Your photo appears here and stays on this device. Use two marks for each straight reference/garment width.</div>
+        <div class="photo-placeholder" id="photo-placeholder">Your photo preview appears here locally. Use two marks for each straight reference or garment width.</div>
       </div>
+      <p class="photo-safety" id="photo-safety">Include the entire garment and flat A4 sheet; keep people and identifying details out of the frame. A4 is the only supported photo scale.</p>
       <p class="photo-step" id="photo-step" role="status" aria-live="polite">Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.</p>
       <div class="photo-actions">
+        <button class="demo-button" id="skip-photo-area" type="button" disabled>Skip this area</button>
         <button class="demo-button" id="restart-photo-marks" type="button" disabled>Restart measurements</button>
         <button class="demo-button" id="remove-photo" type="button" disabled>Remove photo</button>
       </div>
       <div class="photo-result" id="photo-result" aria-live="polite" hidden></div>
       <p class="demo-status" id="photo-fabric-status" role="status">No fabric is confirmed. The photo cannot reliably identify fabric.</p>
-      <p>Measurements are approximate: camera angle, wrinkles, garment stretch and mark placement affect them. A flat width is doubled to estimate circumference only when the garment is laid flat. Fabric is never inferred from appearance; check the care label or material with the seller. The photo comparison changes the shopping garment/fabric cards only, not the separate body-measurement recommendation above.</p>
+      <p>All comparisons are approximate, not a guarantee of fit. Camera angle, wrinkles, style, material, stretch and mark placement affect results. A flat width is doubled to estimate circumference only when the garment is laid flat. Ask the seller for actual measurements when possible. The photo does not identify fabric, infer a person's measurements, or change the separate sizing demo.</p>
     </section>
     <section class="weather" aria-label="Current weather">
       <div class="weather-copy">
@@ -1347,7 +1389,6 @@
       }
 
       document.getElementById("record-sample").addEventListener("click", () => {
-        if (!photoResult.hidden) resetPhotoMarks();
         const measurements = readMeasurements("garment", document.getElementById("garment-unit").value);
         const status = document.getElementById("sample-status");
         if (!measurements) {
@@ -1368,7 +1409,6 @@
         input.addEventListener("change", updateFitDemo);
       });
       function handleGarmentChange() {
-        if (!photoResult.hidden) resetPhotoMarks();
         const status = document.getElementById("sample-status");
         status.dataset.current = "false";
         const measurements = readMeasurements("garment", document.getElementById("garment-unit").value);
@@ -1393,11 +1433,19 @@
       const photoResult = document.getElementById("photo-result");
       const photoPlaceholder = document.getElementById("photo-placeholder");
       const photoRestart = document.getElementById("restart-photo-marks");
+      const photoSkip = document.getElementById("skip-photo-area");
       const photoRemove = document.getElementById("remove-photo");
       const scaleEdge = document.getElementById("scale-edge");
       const a4EdgeLengthsCm = new Map([["long", 29.7], ["short", 21]]);
       const photoFabric = document.getElementById("photo-fabric");
       const photoFabricStatus = document.getElementById("photo-fabric-status");
+      const referenceStorageKey = "fashion-fit-known-fit-garment-v1";
+      const referenceAreas = ["bust", "waist", "hip"];
+      const referenceLabels = { bust: "Bust / chest", waist: "Waist", hip: "Hip" };
+      const referenceStatus = document.getElementById("reference-status");
+      let referenceLoadError = false;
+      let knownFitMeasurements = loadKnownFitMeasurements();
+      let referenceInputUnit = document.getElementById("reference-unit").value;
       const photoImage = new Image();
       const photoStages = [
         { key: "scale", label: "scale reference edge" },
@@ -1413,13 +1461,131 @@
       let activePhotoPoints = [];
       let photoCursor = { x: 0.5, y: 0.5 };
 
+      function loadKnownFitMeasurements() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(referenceStorageKey) || "null");
+          if (!stored || typeof stored !== "object") return {};
+          return Object.fromEntries(referenceAreas.flatMap(name => {
+            const value = stored[name];
+            return Number.isFinite(value) && value >= 20 && value <= 200 ? [[name, value]] : [];
+          }));
+        } catch {
+          referenceLoadError = true;
+          return {};
+        }
+      }
+
+      function renderKnownFitReference() {
+        const unit = document.getElementById("reference-unit").value;
+        const minimum = unit === "in" ? "7.9" : "20";
+        const maximum = unit === "in" ? "78.7" : "200";
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`reference-${name}`);
+          input.min = minimum;
+          input.max = maximum;
+          input.value = knownFitMeasurements[name] == null
+            ? ""
+            : (unit === "in" ? knownFitMeasurements[name] / 2.54 : knownFitMeasurements[name]).toFixed(1);
+        }
+        updateKnownFitStatus(unit);
+      }
+
+      function updateKnownFitStatus(unit) {
+        if (referenceLoadError) {
+          referenceStatus.textContent = "Could not load the saved reference from this browser. Enter its measurements again and save to replace it.";
+          return;
+        }
+        const saved = referenceAreas.filter(name => knownFitMeasurements[name] != null);
+        referenceStatus.textContent = saved.length
+          ? `Saved on this device: ${saved.map(name => `${referenceLabels[name].toLowerCase()} ${formatMeasurement(knownFitMeasurements[name], unit)}`).join(" · ")}.`
+          : "No known-fit garment measurements saved yet.";
+      }
+
+      function saveKnownFitReference() {
+        const unit = document.getElementById("reference-unit").value;
+        const values = {};
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`reference-${name}`);
+          if (!input.value.trim()) continue;
+          const value = Number(input.value);
+          const centimetres = unit === "in" ? value * 2.54 : value;
+          if (!Number.isFinite(value) || centimetres < 20 || centimetres > 200) {
+            const range = unit === "in" ? "7.9 to 78.7" : "20 to 200";
+            referenceStatus.textContent = `Enter a valid ${referenceLabels[name].toLowerCase()} circumference from ${range} ${unit}, or leave it blank.`;
+            input.focus();
+            return;
+          }
+          values[name] = centimetres;
+        }
+        if (!Object.keys(values).length) {
+          referenceStatus.textContent = "Enter at least one actual measurement from a garment you know fits.";
+          return;
+        }
+        try {
+          localStorage.setItem(referenceStorageKey, JSON.stringify(values));
+          knownFitMeasurements = values;
+          referenceLoadError = false;
+          renderKnownFitReference();
+          referenceStatus.textContent += " Stored only in this browser on this device.";
+          if (photoReady && photoStageIndex >= photoStages.length) showPhotoEstimate();
+        } catch {
+          referenceStatus.textContent = "Could not save in this browser. Check device storage settings and try again.";
+        }
+      }
+
+      document.getElementById("save-reference").addEventListener("click", saveKnownFitReference);
+      document.getElementById("clear-reference").addEventListener("click", () => {
+        try {
+          localStorage.removeItem(referenceStorageKey);
+          knownFitMeasurements = {};
+          referenceLoadError = false;
+          renderKnownFitReference();
+          if (photoReady && photoStageIndex >= photoStages.length) showPhotoEstimate();
+        } catch {
+          referenceStatus.textContent = "Could not clear the saved measurements in this browser.";
+        }
+      });
+      document.getElementById("reference-unit").addEventListener("change", event => {
+        const nextUnit = event.target.value;
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`reference-${name}`);
+          if (!input.value.trim()) continue;
+          const currentValue = Number(input.value);
+          const converted = referenceInputUnit === nextUnit
+            ? currentValue
+            : nextUnit === "in" ? currentValue / 2.54 : currentValue * 2.54;
+          input.value = converted.toFixed(1);
+        }
+        referenceInputUnit = nextUnit;
+        const minimum = nextUnit === "in" ? "7.9" : "20";
+        const maximum = nextUnit === "in" ? "78.7" : "200";
+        for (const name of referenceAreas) {
+          const input = document.getElementById(`reference-${name}`);
+          input.min = minimum;
+          input.max = maximum;
+        }
+        updateKnownFitStatus(nextUnit);
+      });
+      referenceAreas.forEach(name => {
+        document.getElementById(`reference-${name}`).addEventListener("input", () => {
+          referenceStatus.textContent = "These edits are not saved yet. Save to use them in the comparison.";
+        });
+      });
+      renderKnownFitReference();
+
       function photoStageInstruction() {
         if (!photoReady) return "Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.";
-        if (photoStageIndex >= photoStages.length) return "Photo estimate ready. Review the approximate measurements and fabric cards below.";
+        if (photoStageIndex >= photoStages.length) return "Photo estimate ready. Review the approximate measurements and comparison below.";
         const stage = photoStages[photoStageIndex];
         if (activePhotoPoints.length) return `Mark the second endpoint of the ${stage.label}.`;
         if (stage.key === "scale") return `Mark both ends of the selected ${scaleEdge.options[scaleEdge.selectedIndex].text} in the photo.`;
-        return `Mark both ends of the ${stage.label}; use the same straight-across direction as the garment's laid-flat width.`;
+        return `Mark both ends of the ${stage.label}, or skip if that area does not apply to this garment.`;
+      }
+
+      function updatePhotoActions() {
+        photoRestart.disabled = !photoReady;
+        photoSkip.disabled = !photoReady || photoStageIndex === 0 ||
+          photoStageIndex >= photoStages.length || activePhotoPoints.length > 0;
       }
 
       function drawPhotoCanvas() {
@@ -1480,11 +1646,6 @@
         }
       }
 
-      function restoreManualShoppingComparison() {
-        const currentGarment = readMeasurements("garment", document.getElementById("garment-unit").value);
-        updateShoppingSize(currentGarment || sampleMeasurements);
-      }
-
       function clearPhoto(clearInput = true) {
         photoLoadId++;
         photoImage.onload = null;
@@ -1506,16 +1667,24 @@
       }
 
       function resetPhotoMarks(message = "") {
-        const hadPhotoComparison = !photoResult.hidden;
         photoStageIndex = 0;
         photoLines = {};
         activePhotoPoints = [];
         photoResult.hidden = true;
         photoResult.replaceChildren();
         photoStep.textContent = message || photoStageInstruction();
-        photoRestart.disabled = !photoReady;
+        updatePhotoActions();
         drawPhotoCanvas();
-        if (hadPhotoComparison) restoreManualShoppingComparison();
+      }
+
+      function skipPhotoArea() {
+        if (!photoReady || photoStageIndex === 0 || photoStageIndex >= photoStages.length || activePhotoPoints.length) return;
+        photoLines[photoStages[photoStageIndex].key] = null;
+        photoStageIndex++;
+        if (photoStageIndex === photoStages.length) showPhotoEstimate();
+        else photoStep.textContent = photoStageInstruction();
+        updatePhotoActions();
+        drawPhotoCanvas();
       }
 
       function updatePhotoFabricChoice() {
@@ -1543,33 +1712,58 @@
         const pixelsPerCm = photoDistance(photoLines.scale) / referenceCm;
         const widths = Object.fromEntries(["bust", "waist", "hip"].map(name => [
           name,
-          photoDistance(photoLines[name]) / pixelsPerCm
+          photoLines[name] ? photoDistance(photoLines[name]) / pixelsPerCm : null
         ]));
-        const circumferences = Object.fromEntries(Object.entries(widths).map(([name, width]) => [name, width * 2]));
-        const invalidMeasurement = Object.entries(circumferences).find(([, value]) => !Number.isFinite(value) || value < 20 || value > 200);
+        const circumferences = Object.fromEntries(Object.entries(widths).map(([name, width]) => [name, width == null ? null : width * 2]));
+        const invalidMeasurement = Object.entries(circumferences).filter(([, value]) => value != null)
+          .find(([, value]) => !Number.isFinite(value) || value < 20 || value > 200);
         if (!Number.isFinite(referenceCm) || !Number.isFinite(pixelsPerCm) || pixelsPerCm <= 0 || invalidMeasurement) {
           resetPhotoMarks("Those marks produced an implausible scale or garment width. Check that the reference edge is correct and the garment is flat, then mark again.");
           return;
         }
 
-        const garmentSize = updateShoppingSize(circumferences);
-        const unit = document.getElementById("garment-unit").value;
+        const unit = document.getElementById("reference-unit").value;
         const displayValue = value => formatMeasurement(value, unit);
+        const comparedAreas = referenceAreas.filter(name =>
+          knownFitMeasurements[name] != null && Number.isFinite(circumferences[name])
+        );
+        const differences = Object.fromEntries(comparedAreas.map(name => [
+          name,
+          circumferences[name] - knownFitMeasurements[name]
+        ]));
+        const smaller = comparedAreas.filter(name => differences[name] < -3);
+        const roomier = comparedAreas.filter(name => differences[name] > 3);
+        let assessment;
+        if (!comparedAreas.length) {
+          assessment = "Cannot assess yet — save a matching reference measurement and mark that area on the target garment.";
+        } else if (!smaller.length && !roomier.length) {
+          assessment = `Similar to your known-fit garment in the measured area${comparedAreas.length === 1 ? "" : "s"}.`;
+        } else if (smaller.length && roomier.length) {
+          assessment = `Mixed dimensions — smaller at ${smaller.map(name => referenceLabels[name].toLowerCase()).join(", ")}, roomier at ${roomier.map(name => referenceLabels[name].toLowerCase()).join(", ")}.`;
+        } else if (smaller.length) {
+          assessment = `Smaller than your known-fit garment at ${smaller.map(name => referenceLabels[name].toLowerCase()).join(", ")}.`;
+        } else {
+          assessment = `Roomier than your known-fit garment at ${roomier.map(name => referenceLabels[name].toLowerCase()).join(", ")}.`;
+        }
+        const missingReferenceAreas = referenceAreas.filter(name => knownFitMeasurements[name] == null);
+        const missingTargetAreas = referenceAreas.filter(name => circumferences[name] == null);
+        const scopeNote = comparedAreas.length
+          ? `Compared ${comparedAreas.map(name => referenceLabels[name].toLowerCase()).join(", ")}${missingReferenceAreas.length ? ` only; no saved reference for ${missingReferenceAreas.map(name => referenceLabels[name].toLowerCase()).join(", ")}` : ""}${missingTargetAreas.length ? `; target not measured at ${missingTargetAreas.map(name => referenceLabels[name].toLowerCase()).join(", ")}` : ""}.`
+          : "No matching reference dimensions were available, so fit cannot be assessed.";
         photoResult.innerHTML = `
-          <strong>Approximate garment comparison: size ${displaySize(garmentSize)}</strong>
-          <p>This is an illustrative garment-label estimate from your marks, not a body-size recommendation or fit prediction. The shopping size buttons and all visible fabric cards now use this garment estimate.</p>
-          <table><thead><tr><th>Garment area</th><th>Marked flat width</th><th>Approx. circumference (width × 2)</th></tr></thead>
+          <strong>Approximate comparison: ${assessment}</strong>
+          <p>${scopeNote}</p>
+          <table><thead><tr><th>Area</th><th>Target garment (approx.)</th><th>Your known-fit garment</th><th>Difference</th></tr></thead>
             <tbody>${["bust", "waist", "hip"].map(name =>
-              `<tr><td>${name[0].toUpperCase()}${name.slice(1)}</td><td>${displayValue(widths[name])}</td><td>${displayValue(circumferences[name])}</td></tr>`
+              `<tr><td>${referenceLabels[name]}</td><td>${circumferences[name] == null ? "Not measured" : displayValue(circumferences[name])}</td><td>${knownFitMeasurements[name] == null ? "Not saved" : displayValue(knownFitMeasurements[name])}</td><td>${differences[name] == null ? "Not compared" : `${differences[name] > 0 ? "+" : ""}${displayValue(differences[name])}`}</td></tr>`
             ).join("")}</tbody></table>
           <p class="photo-fabric-summary"></p>
-          <p>Camera perspective, folds, stretch and the marks can affect these estimates. Compare actual listing measurements.</p>`;
+          <p>A flat width is doubled to estimate circumference. Differences within 3 cm are labelled similar; this is only a comparison tolerance, not an ease rule. This is not a guarantee: style, material, stretch, camera angle, folds and mark placement matter. Compare actual listing measurements and consider your fit preference.</p>`;
         photoResult.hidden = false;
         updatePhotoFabricChoice();
-        document.getElementById("garment-size-detail").textContent =
-          `Photo estimate (approximate garment circumferences): bust ${displayValue(circumferences.bust)} · waist ${displayValue(circumferences.waist)} · hip ${displayValue(circumferences.hip)}. This does not predict body fit.`;
-        photoStep.textContent = `Photo comparison ready. The cards show approximate garment size ${displaySize(garmentSize)}; body measurements and fit recommendation are unchanged.`;
+        photoStep.textContent = "Photo comparison ready. Only matching saved garment measurements were compared; the separate sample sizing demo is unchanged.";
         photoRestart.disabled = false;
+        updatePhotoActions();
       }
 
       function markPhotoPoint(x, y) {
@@ -1592,6 +1786,7 @@
         } else {
           photoStep.textContent = photoStageInstruction();
         }
+        updatePhotoActions();
         drawPhotoCanvas();
       }
 
@@ -1671,6 +1866,7 @@
         drawPhotoCanvas();
       });
       photoRestart.addEventListener("click", () => resetPhotoMarks());
+      photoSkip.addEventListener("click", skipPhotoArea);
       photoRemove.addEventListener("click", () => clearPhoto());
       scaleEdge.addEventListener("change", () => resetPhotoMarks());
       photoFabric.addEventListener("change", updatePhotoFabricChoice);

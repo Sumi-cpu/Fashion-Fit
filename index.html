@@ -739,7 +739,7 @@
     <section class="photo-tool" aria-labelledby="photo-title">
       <h2 id="photo-title">Compare a garment without entering body sizes</h2>
       <p>Choose a clear, straight-overhead photo of a garment laid flat, with an A4 sheet in the same plane. Use its long edge (29.7 cm) or short edge (21 cm) as the scale reference, then mark across the garment at the bust, waist and hip. The app estimates garment dimensions; it does not identify your body size or predict fit. You can skip the shopper-measurement panel for this comparison; its starting values are examples, and the photo path does not use them.</p>
-      <p class="photo-privacy"><strong>Private by design:</strong> your selected photo is read and measured in this browser only. It is not uploaded or saved by Fashion Fit.</p>
+      <p class="photo-privacy"><strong>Private by design:</strong> your selected photo is read and measured in this browser only. It is not uploaded or saved by Fashion Fit. Select <strong>Remove photo</strong> to clear it from this browser session; the original file on your device is not deleted.</p>
       <div class="photo-controls">
         <label class="photo-field" for="garment-photo">Choose or take a garment photo
           <input id="garment-photo" type="file" accept="image/*" capture="environment">
@@ -761,6 +761,7 @@
       <p class="photo-step" id="photo-step" role="status" aria-live="polite">Choose a photo to begin. Keep the garment and reference flat, fully visible, and evenly lit.</p>
       <div class="photo-actions">
         <button class="demo-button" id="restart-photo-marks" type="button" disabled>Restart measurements</button>
+        <button class="demo-button" id="remove-photo" type="button" disabled>Remove photo</button>
       </div>
       <div class="photo-result" id="photo-result" aria-live="polite" hidden></div>
       <p class="demo-status" id="photo-fabric-status" role="status">No fabric is confirmed. The photo cannot reliably identify fabric.</p>
@@ -1173,6 +1174,7 @@
       const photoResult = document.getElementById("photo-result");
       const photoPlaceholder = document.getElementById("photo-placeholder");
       const photoRestart = document.getElementById("restart-photo-marks");
+      const photoRemove = document.getElementById("remove-photo");
       const scaleEdge = document.getElementById("scale-edge");
       const a4EdgeLengthsCm = new Map([["long", 29.7], ["short", 21]]);
       const photoFabric = document.getElementById("photo-fabric");
@@ -1185,6 +1187,7 @@
         { key: "hip", label: "garment width at the fullest hip" }
       ];
       let photoObjectUrl = "";
+      let photoLoadId = 0;
       let photoReady = false;
       let photoStageIndex = 0;
       let photoLines = {};
@@ -1261,6 +1264,26 @@
       function restoreManualShoppingComparison() {
         const currentGarment = readMeasurements("garment", document.getElementById("garment-unit").value);
         updateShoppingSize(currentGarment || sampleMeasurements);
+      }
+
+      function clearPhoto(clearInput = true) {
+        photoLoadId++;
+        photoImage.onload = null;
+        photoImage.onerror = null;
+        photoImage.removeAttribute("src");
+        if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
+        photoObjectUrl = "";
+        if (clearInput) photoInput.value = "";
+        photoReady = false;
+        photoCanvas.width = 1;
+        photoCanvas.height = 1;
+        photoCanvas.hidden = true;
+        photoPlaceholder.hidden = false;
+        photoRemove.disabled = true;
+        photoFabric.value = "";
+        updatePhotoFabricChoice();
+        resetPhotoMarks();
+        photoCursor = { x: 0.5, y: 0.5 };
       }
 
       function resetPhotoMarks(message = "") {
@@ -1356,21 +1379,24 @@
       photoInput.addEventListener("change", () => {
         const file = photoInput.files[0];
         if (!file) return;
+        clearPhoto(false);
         if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
           photoStep.textContent = "Choose an image file smaller than 20 MB.";
           photoInput.value = "";
           return;
         }
-        resetPhotoMarks();
-        if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
-        photoReady = false;
+        const loadId = ++photoLoadId;
         photoObjectUrl = URL.createObjectURL(file);
+        photoRemove.disabled = false;
         photoImage.onload = () => {
+          if (loadId !== photoLoadId) return;
           if (photoImage.naturalWidth * photoImage.naturalHeight > 40_000_000) {
             photoReady = false;
             photoCanvas.hidden = true;
             photoPlaceholder.hidden = false;
             photoRestart.disabled = true;
+            photoInput.value = "";
+            photoRemove.disabled = true;
             photoStep.textContent = "This image is too large to process here. Choose a photo under 40 megapixels.";
             URL.revokeObjectURL(photoObjectUrl);
             photoObjectUrl = "";
@@ -1383,15 +1409,19 @@
           photoCanvas.hidden = false;
           photoPlaceholder.hidden = true;
           photoRestart.disabled = false;
+          photoRemove.disabled = false;
           photoCursor = { x: 0.5, y: 0.5 };
           resetPhotoMarks();
           drawPhotoCanvas();
         };
         photoImage.onerror = () => {
+          if (loadId !== photoLoadId) return;
           photoReady = false;
           photoCanvas.hidden = true;
           photoPlaceholder.hidden = false;
           photoRestart.disabled = true;
+          photoInput.value = "";
+          photoRemove.disabled = true;
           photoStep.textContent = "That image could not be opened. Try another image file.";
           URL.revokeObjectURL(photoObjectUrl);
           photoObjectUrl = "";
@@ -1422,10 +1452,14 @@
         drawPhotoCanvas();
       });
       photoRestart.addEventListener("click", () => resetPhotoMarks());
+      photoRemove.addEventListener("click", () => clearPhoto());
       scaleEdge.addEventListener("change", () => resetPhotoMarks());
       photoFabric.addEventListener("change", updatePhotoFabricChoice);
       updatePhotoFabricChoice();
       window.addEventListener("beforeunload", () => {
+        photoLoadId++;
+        photoImage.onload = null;
+        photoImage.onerror = null;
         if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
       });
       document.getElementById("download-fit-note").addEventListener("click", () => {

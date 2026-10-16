@@ -13,8 +13,8 @@ Fashion Fit is a second-hand and vintage clothing sizing demo. It shows how garm
 
 Use **Compare a garment without entering body sizes** to estimate garment measurements without entering personal body measurements. The example values in the separate shopper panel are not used by this photo comparison.
 
-1. Lay the garment flat and take a straight-overhead, well-lit photo with a flat A4 sheet or credit/debit card next to it in the same plane.
-2. Choose the image and the scale reference. Select the exact long or short reference edge visible in the image.
+1. Lay the garment flat and take a straight-overhead, well-lit photo with a flat A4 sheet next to it in the same plane; A4 paper is the only supported scale reference.
+2. Choose the image and select the exact A4 edge visible in the photo: the long edge is 29.7 cm and the short edge is 21 cm.
 3. Mark the two endpoints of that reference edge, then the laid-flat width across the garment at the bust/underarms, waist and fullest hip. Click/tap the points or focus the image and use arrow keys and Enter.
 4. Review the approximate flat widths and doubled circumference estimates. The approximate garment size updates the shopping size and fabric cards. Optionally choose a fabric only if you can confirm it from a care label or seller; the app does not identify fabric from a photo.
 

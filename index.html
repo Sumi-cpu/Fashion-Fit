@@ -87,6 +87,22 @@
       letter-spacing: .01em;
     }
 
+    .topbar-tools { display: flex; align-items: center; gap: 12px; }
+    .soundtrack-toggle {
+      min-height: 33px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--green);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .soundtrack-toggle:hover { background: var(--green-soft); }
+    .soundtrack-status { color: var(--muted); font-size: 10px; }
+
     .intro { padding: 35px 0 24px; }
 
     .eyebrow {
@@ -608,7 +624,10 @@
     @media (max-width: 520px) {
 
       .shell { width: min(100% - 26px, 440px); padding-top: 20px; }
-      .topbar { padding-bottom: 20px; }
+      .topbar { align-items: flex-start; flex-wrap: wrap; gap: 12px; padding-bottom: 20px; }
+      .topbar-tools { width: 100%; justify-content: space-between; gap: 7px; }
+      .top-note { font-size: 10px; }
+      .soundtrack-toggle { min-height: 38px; }
       .intro { padding-top: 27px; }
       .qr-promo { gap: 11px; padding: 12px; }
       .qr-link-image img { width: 96px; height: 96px; }
@@ -648,6 +667,10 @@
       .top-note { font-size: 11px; }
     }
 
+    @media (max-width: 420px) {
+      .top-note { display: none; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
@@ -666,6 +689,8 @@
       }
       body { background: radial-gradient(ellipse at 50% -18%, rgb(68 79 61 / 22%), transparent 36rem), var(--paper); }
       .mark { color: #20271f; }
+      .soundtrack-toggle { border-color: #495b46; background: #252a24; color: #d6e3d0; }
+      .soundtrack-toggle:hover { background: #303a30; }
       .innovation { border-color: #40473d; background: linear-gradient(115deg, #283128, #302f27); }
       .demo-step { border-color: rgb(190 210 180 / 12%); background: rgb(255 255 255 / 4%); }
       .demo-button { border-color: #495b46; background: #303a30; color: #d6e3d0; }
@@ -700,7 +725,11 @@
         </span>
         Fashion Fit
       </a>
-      <span class="top-note">Pre-loved, well considered</span>
+      <div class="topbar-tools">
+        <span class="top-note">Pre-loved, well considered</span>
+        <button class="soundtrack-toggle" id="soundtrack-toggle" type="button" aria-label="Play original vintage-inspired instrumental" aria-pressed="false">Play music</button>
+        <span class="soundtrack-status" id="soundtrack-status" role="status" aria-live="polite">Original instrumental · off</span>
+      </div>
     </header>
 
     <section class="intro" aria-labelledby="page-title">
@@ -709,13 +738,13 @@
     </section>
 
     <section class="qr-promo" aria-labelledby="qr-title">
-      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=0ac715a1168c4c7afbd7b78b51be611ddb71f5df" target="_blank" rel="noopener noreferrer">
+      <a class="qr-link-image" href="https://sumi-cpu.github.io/Fashion-Fit/?v=vintage-music-20261016" target="_blank" rel="noopener noreferrer">
         <img src="assets/fashion-fit-qr.png" alt="QR code to open the Fashion Fit live sizing demo">
       </a>
       <div class="qr-copy">
         <p class="innovation-label">Share the live demo</p>
         <h2 class="qr-title" id="qr-title">Scan to open Fashion Fit</h2>
-        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=0ac715a1168c4c7afbd7b78b51be611ddb71f5df" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
+        <p>Open the live sizing demo on your phone, or <a class="qr-open-link" href="https://sumi-cpu.github.io/Fashion-Fit/?v=vintage-music-20261016" target="_blank" rel="noopener noreferrer">open Fashion Fit</a>.</p>
       </div>
     </section>
 
@@ -972,6 +1001,153 @@
 
   <script>
     (() => {
+      const soundtrackButton = document.getElementById("soundtrack-toggle");
+      const soundtrackStatus = document.getElementById("soundtrack-status");
+      const AudioContextType = window.AudioContext || window.webkitAudioContext;
+      const beatDuration = 60 / 82;
+      const stepDuration = beatDuration / 2;
+      const melody = [72, 76, 79, 81, 79, 76, 69, 72, 76, 79, 76, 72, 69, 72, 77, 76, 72, 69, 67, 71, 74, 77, 74, 71];
+      const chords = [
+        { bass: 48, notes: [60, 64, 67, 69] },
+        { bass: 45, notes: [57, 60, 64, 67] },
+        { bass: 41, notes: [53, 57, 60, 64] },
+        { bass: 43, notes: [55, 59, 62, 65] }
+      ];
+      let audioContext;
+      let masterGain;
+      let scheduler;
+      let fadeTimer;
+      let phraseStart;
+      let nextStep = 0;
+      let musicPlaying = false;
+      let musicStarting = false;
+
+      function setMusicControl(playing, status) {
+        musicPlaying = playing;
+        soundtrackButton.textContent = playing ? "Pause music" : "Play music";
+        soundtrackButton.setAttribute("aria-label", `${playing ? "Pause" : "Play"} original vintage-inspired instrumental`);
+        soundtrackButton.setAttribute("aria-pressed", String(playing));
+        soundtrackStatus.textContent = status;
+      }
+
+      function addNote(midi, when, duration, volume, waveform) {
+        const oscillator = audioContext.createOscillator();
+        const envelope = audioContext.createGain();
+        oscillator.type = waveform;
+        oscillator.frequency.value = 440 * 2 ** ((midi - 69) / 12);
+        envelope.gain.setValueAtTime(0.0001, when);
+        envelope.gain.linearRampToValueAtTime(volume, when + 0.035);
+        envelope.gain.setTargetAtTime(0.0001, when + duration, 0.12);
+        oscillator.connect(envelope);
+        envelope.connect(masterGain);
+        oscillator.start(when);
+        oscillator.stop(when + duration + 0.5);
+      }
+
+      function playStep(step, when) {
+        const measure = Math.floor(step / 6);
+        const beatInMeasure = step % 6;
+        const chord = chords[measure];
+        if (beatInMeasure === 0) {
+          chord.notes.forEach((note, index) => addNote(note, when + index * 0.012, beatDuration * 2.6, 0.035, "sine"));
+          addNote(chord.bass, when, beatDuration * 0.85, 0.12, "triangle");
+        } else if (beatInMeasure === 3) {
+          addNote(chord.bass + 12, when, beatDuration * 0.55, 0.045, "sine");
+        }
+        const note = melody[step];
+        if (note) addNote(note, when, stepDuration * 0.82, 0.085, "sine");
+      }
+
+      function scheduleMusic() {
+        if (!musicPlaying) return;
+        try {
+          const currentTime = audioContext.currentTime;
+          const elapsedStep = Math.max(0, Math.floor((currentTime - phraseStart) / stepDuration));
+          if (nextStep < elapsedStep) nextStep = elapsedStep;
+          const horizon = currentTime + 0.18;
+          while (phraseStart + nextStep * stepDuration < horizon) {
+            const stepTime = phraseStart + nextStep * stepDuration;
+            playStep(nextStep % 24, stepTime);
+            nextStep++;
+          }
+        } catch (error) {
+          console.error("Could not continue the original Fashion Fit instrumental.", error);
+          setMusicControl(false, "Music stopped unexpectedly. Please try again.");
+          clearInterval(scheduler);
+          audioContext?.suspend().catch(suspendError => {
+            console.error("Could not suspend the Fashion Fit audio context.", suspendError);
+          });
+        }
+      }
+
+      async function startMusic() {
+        if (musicStarting) return;
+        if (!AudioContextType) {
+          soundtrackButton.disabled = true;
+          setMusicControl(false, "Audio playback is not supported in this browser.");
+          return;
+        }
+        musicStarting = true;
+        soundtrackButton.disabled = true;
+        try {
+          if (!audioContext || audioContext.state === "closed") {
+            audioContext = new AudioContextType();
+            masterGain = audioContext.createGain();
+            masterGain.gain.value = 0.0001;
+            masterGain.connect(audioContext.destination);
+          }
+          clearTimeout(fadeTimer);
+          await audioContext.resume();
+          if (document.hidden) {
+            await audioContext.suspend();
+            setMusicControl(false, "Original instrumental · paused");
+            return;
+          }
+          musicPlaying = true;
+          phraseStart = audioContext.currentTime + 0.08;
+          nextStep = 0;
+          masterGain.gain.cancelScheduledValues(audioContext.currentTime);
+          masterGain.gain.setTargetAtTime(0.24, audioContext.currentTime, 0.2);
+          setMusicControl(true, "Playing original instrumental");
+          scheduler = window.setInterval(scheduleMusic, 40);
+          scheduleMusic();
+        } catch (error) {
+          console.error("Could not start the original Fashion Fit instrumental.", error);
+          setMusicControl(false, "Music could not start. Check your browser's audio settings and try again.");
+        } finally {
+          musicStarting = false;
+          soundtrackButton.disabled = false;
+        }
+      }
+
+      function pauseMusic() {
+        if (!musicPlaying) return;
+        setMusicControl(false, "Original instrumental · paused");
+        clearInterval(scheduler);
+        if (audioContext && masterGain) {
+          masterGain.gain.cancelScheduledValues(audioContext.currentTime);
+          masterGain.gain.setTargetAtTime(0.0001, audioContext.currentTime, 0.035);
+          clearTimeout(fadeTimer);
+          fadeTimer = window.setTimeout(() => {
+            if (audioContext?.state === "running") {
+              audioContext.suspend().catch(error => {
+                console.error("Could not suspend the Fashion Fit audio context.", error);
+                soundtrackStatus.textContent = "Music paused; your browser could not suspend audio.";
+              });
+            }
+          }, 180);
+        }
+      }
+
+      soundtrackButton.addEventListener("click", () => {
+        if (musicPlaying) pauseMusic();
+        else startMusic();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) pauseMusic();
+      });
+      window.addEventListener("pagehide", pauseMusic);
+
       const sizeButtons = [...document.querySelectorAll(".size-button")];
       const cards = [...document.querySelectorAll(".fabric-card")];
       const search = document.getElementById("fabric-search");

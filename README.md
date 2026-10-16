@@ -22,10 +22,14 @@ The image is processed locally in the browser and is not uploaded or saved by Fa
 
 The garment label estimate subtracts typical ease from the sample measurements before comparing them with an illustrative size guide. The fit estimate compares the recorded garment dimensions directly with shopper body measurements. Both use transparent, illustrative rules and approximate size conversions in the browser. This is a prototype—not a connected or trained AI model, a brand-specific size chart, or a guarantee of fit. Compare each vintage item's actual measurements. No entered measurements are uploaded.
 
+## Original optional soundtrack
+
+Select **Play music** in the header to hear a gentle, vintage-inspired instrumental composed for Fashion Fit and synthesized locally by the browser. Music is off until clicked, plays at a restrained volume, and pauses when the page is hidden. No audio files, external services, or additional dependencies are used.
+
 The app is a single `index.html` file with no build step or app dependencies. GitHub Pages serves the public demo at <https://sumi-cpu.github.io/Fashion-Fit/>.
 
 ## Open or share the live demo
 
 Scan the QR code near the top of the app, or use the cache-busted live URL:
-<https://sumi-cpu.github.io/Fashion-Fit/?v=0ac715a1168c4c7afbd7b78b51be611ddb71f5df>.
+<https://sumi-cpu.github.io/Fashion-Fit/?v=vintage-music-20261016>.
 The high-contrast QR image is tracked at [`assets/fashion-fit-qr.png`](assets/fashion-fit-qr.png).

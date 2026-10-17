@@ -1,0 +1,8 @@
+{
+  "appId": "com.sumicpu.fashionfit",
+  "appName": "Fashion Fit",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

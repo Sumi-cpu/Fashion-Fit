@@ -31,7 +31,27 @@ The separate sample garment and body-measurement demo uses transparent, illustra
 
 Select **Play music** in the header to hear a gentle, vintage-inspired instrumental composed for Fashion Fit and synthesized locally by the browser. Music is off until clicked, plays at a restrained volume, and pauses when the page is hidden. No audio files, external services, or additional dependencies are used.
 
-The app is a single `index.html` file with no build step or app dependencies. GitHub Pages serves the public demo at <https://sumi-cpu.github.io/Fashion-Fit/>.
+The browser demo remains a static, dependency-free site. GitHub Pages serves the public demo at <https://sumi-cpu.github.io/Fashion-Fit/>. An optional Capacitor wrapper packages the same app for iOS and Android; its build copies the static site to `www/` and does not change the GitHub Pages deployment.
+
+## Prepare iOS and Android store builds
+
+The native projects are store-build scaffolding, not published apps. The QR code in the app and pitch deck still opens the live web demo; there are no App Store or Google Play listing URLs yet. Do not describe Fashion Fit as available in either store until the apps have been reviewed and the listing URLs are live.
+
+### Build locally
+
+Requirements: Node.js 22 or newer, npm, Android Studio with its Android SDK for Android builds, and macOS with Xcode for iOS builds. Apple requires macOS/Xcode for signing and submitting an iOS app; a Windows machine can edit the iOS project but cannot produce the signed App Store build.
+
+```sh
+npm ci
+npm run build:mobile
+npx cap open android
+# On macOS, instead open the iOS project:
+npx cap open ios
+```
+
+In Android Studio, install the configured Android SDK, choose a release build, and sign it with a private upload key kept outside this repository. In Xcode, select a team and signing identity, set the final bundle identifier, and archive the app for App Store Connect. Never commit signing keys, provisioning profiles, passwords, or store credentials. Test photo capture/file selection, offline launch, local saved profiles, and the optional audio on real iOS and Android devices.
+
+The current bundle identifier (`com.sumicpu.fashionfit`) is a proposed starting point, not a confirmed legal or store identity. Confirm it is available and owned by the publisher before release. Review `STORE_RELEASE.md` and `PRIVACY.md` before completing store questionnaires or submitting. Store publication also requires the publisher's paid developer accounts, verified legal/contact details, final app identity, support and privacy-policy URLs, screenshots and listing copy, age/content ratings, privacy/data-safety answers, signed builds, and successful store review. These steps have not been completed; this repository does not publish or submit apps.
 
 ## Open or share the live demo
 
